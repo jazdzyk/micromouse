@@ -3,3 +3,11 @@
 //
 
 #include "BaseController.h"
+
+BaseController::BaseController(QWidget *parent) {
+
+}
+
+BaseController::~BaseController() {
+
+}

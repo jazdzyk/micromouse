@@ -6,6 +6,8 @@
 #define MICROMOUSE_STARTCONTROLLER_H
 
 
+#include "BaseController.h"
+
 class StartController : public BaseController {
 
 };

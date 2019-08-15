@@ -13,7 +13,7 @@ set(CMAKE_PREFIX_PATH "/lib/x86_64-linux-gnu/cmake")
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
-add_executable(micromouse main.cpp src/utils/Timer.cpp src/utils/Timer.h src/controllers/StartController.cpp src/controllers/StartController.h src/controllers/BaseController.cpp src/controllers/BaseController.h src/utils/Enums.h)
+add_executable(micromouse main.cpp src/utils/Timer.cpp src/utils/Timer.h src/controllers/StartController.cpp src/controllers/StartController.h src/controllers/BaseController.cpp src/controllers/BaseController.h src/utils/Enums.h src/utils/SimulationSettings.h src/utils/maze/Maze.cpp src/utils/maze/Maze.h)
 
 target_link_libraries(micromouse Qt5::Core)
 target_link_libraries(micromouse Qt5::Widgets)
