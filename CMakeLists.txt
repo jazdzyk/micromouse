@@ -13,7 +13,7 @@ set(CMAKE_PREFIX_PATH "/lib/x86_64-linux-gnu/cmake")
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
-add_executable(micromouse main.cpp)
+add_executable(micromouse main.cpp src/utils/Timer.cpp src/utils/Timer.h)
 
 target_link_libraries(micromouse Qt5::Core)
 target_link_libraries(micromouse Qt5::Widgets)
