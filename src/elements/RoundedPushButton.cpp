@@ -5,16 +5,20 @@
 #include "RoundedPushButton.h"
 
 RoundedPushButton::RoundedPushButton(const QString &title, int padding) : QPushButton(title) {
+    Log::print("RoundedPushButton::RoundedPushButton(&title: "
+        + title.toStdString() + ", padding: " + std::to_string(padding) + ")");
     setUpStyle(padding);
 }
 
 void RoundedPushButton::setAction(RoundedPushButton::ActionCallback onButtonClicked) {
+    Log::print("RoundedPushButton::setAction(onButtonClicked)");
     connect(this, static_cast<void(QPushButton::*)(bool)>(&QPushButton::clicked), [=](bool _) {
         onButtonClicked();
     });
 }
 
 void RoundedPushButton::setUpStyle(int padding) {
+    Log::print("RoundedPushButton::setUpStyle(padding: " + std::to_string(padding) + ")");
     setStyleSheet(
         "QPushButton {\n"
         "\tfont-weight: bold;\n"

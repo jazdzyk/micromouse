@@ -8,6 +8,7 @@
 
 #include <QtWidgets/QPushButton>
 #include <functional>
+#include "src/utils/Logging.h"
 
 class RoundedPushButton : public QPushButton {
 public:

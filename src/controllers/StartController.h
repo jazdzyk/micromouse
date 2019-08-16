@@ -6,6 +6,7 @@
 #define MICROMOUSE_STARTCONTROLLER_H
 
 
+#include <src/elements/RoundedPushButton.h>
 #include "BaseController.h"
 
 class StartController : public BaseController {
@@ -16,6 +17,7 @@ public:
     ~StartController();
 
 private:
+    RoundedPushButton *startSimulationButton;
 };
 
 

@@ -7,7 +7,7 @@
 
 namespace utils {
     template<typename T>
-    void destruct(T *object) {
+    static void destruct(T *object) {
         delete object;
         object = nullptr;
     }
