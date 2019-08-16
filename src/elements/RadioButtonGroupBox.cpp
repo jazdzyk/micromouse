@@ -4,12 +4,14 @@
 
 #include "RadioButtonGroupBox.h"
 
+#include <utility>
+
 RadioButtonGroupBox::RadioButtonGroupBox(const QString &title, RadioButtonGroupBox::ButtonNames &radioButtonNames,
                                          RadioButtonGroupBox::ActionCallback onRadioButtonClicked) : QGroupBox(title) {
     Log::print("RadioButtonGroupBox::RadioButtonGroupBox(&title: " + title.toStdString() + ", &radioButtonNames, "
                                                                                           "onRadioButtonClicked)");
     setUpUi(radioButtonNames);
-    setRadioButtonsAction(onRadioButtonClicked);
+    setRadioButtonsAction(std::move(onRadioButtonClicked));
 }
 
 RadioButtonGroupBox::~RadioButtonGroupBox() {
@@ -28,7 +30,7 @@ void RadioButtonGroupBox::setUpUi(RadioButtonGroupBox::ButtonNames &radioButtonN
     this->radioButtonGroup = new QButtonGroup;
 
     auto id = 0;
-    for (auto name : radioButtonNames) {
+    for (const auto& name : radioButtonNames) {
         auto *radioButton = new QRadioButton(name);
         radioButton->setChecked(false);
 

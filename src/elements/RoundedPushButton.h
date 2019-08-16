@@ -8,11 +8,12 @@
 
 #include <QtWidgets/QPushButton>
 #include <functional>
+#include <optional>
 #include "src/utils/Logging.h"
 
 class RoundedPushButton : public QPushButton {
 public:
-    using ActionCallback = std::function<void()>;
+    using ActionCallback = std::optional<std::function<void()>>;
 
     explicit RoundedPushButton(const QString &title = "", int padding = 0);
 

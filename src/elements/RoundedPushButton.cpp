@@ -12,9 +12,12 @@ RoundedPushButton::RoundedPushButton(const QString &title, int padding) : QPushB
 
 void RoundedPushButton::setAction(RoundedPushButton::ActionCallback onButtonClicked) {
     Log::print("RoundedPushButton::setAction(onButtonClicked)");
-    connect(this, static_cast<void(QPushButton::*)(bool)>(&QPushButton::clicked), [=](bool _) {
-        onButtonClicked();
-    });
+    if (onButtonClicked) {
+        auto action = *onButtonClicked;
+        connect(this, static_cast<void (QPushButton::*)(bool)>(&QPushButton::clicked), [action](bool _) {
+            action();
+        });
+    }
 }
 
 void RoundedPushButton::setUpStyle(int padding) {

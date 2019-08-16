@@ -36,7 +36,7 @@ private:
     void setUpUi(Texts &labels, Texts &dropDownOptions);
     void setDropDownAction(ActionCallback onDropDownChanged);
     void addDropDowns(Texts &labels, Texts &dropDownOptions, int initialId);
-    QComboBox* prepareDropDown(Texts &dropDownOptions);
+    static QComboBox* prepareDropDown(Texts &dropDownOptions);
 };
 
 

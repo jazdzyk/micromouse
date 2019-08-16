@@ -4,13 +4,15 @@
 
 #include "DropDownGroupBox.h"
 
+#include <utility>
+
 DropDownGroupBox::DropDownGroupBox(const QString &title, DropDownGroupBox::Texts &labels,
                                    DropDownGroupBox::Texts &dropDownOptions,
                                    DropDownGroupBox::ActionCallback onDropDownChanged) : QGroupBox(title) {
     Log::print("DropDownGroupBox::DropDownGroupBox(&title: " + title.toStdString() + ", &labels, &dropDownOptions,"
                                                                                      " onDropDownChanged)");
     setUpUi(labels, dropDownOptions);
-    setDropDownAction(onDropDownChanged);
+    setDropDownAction(std::move(onDropDownChanged));
 }
 
 DropDownGroupBox::~DropDownGroupBox() {

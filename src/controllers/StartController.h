@@ -9,6 +9,7 @@
 #include <src/elements/RoundedPushButton.h>
 #include <src/elements/RadioButtonGroupBox.h>
 #include <src/elements/DropDownGroupBox.h>
+#include <src/elements/CheckButtonGroupBox.h>
 #include "BaseController.h"
 #include "src/utils/Logging.h"
 
@@ -24,6 +25,7 @@ private:
     RadioButtonGroupBox *simulationModeBox;
     RadioButtonGroupBox *mazeSizeBox;
     DropDownGroupBox *algorithmModeBox;
+    CheckButtonGroupBox *ownMazeBox;
 };
 
 
