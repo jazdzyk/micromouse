@@ -6,11 +6,14 @@
 #define MICROMOUSE_BASECONTROLLER_H
 
 
+#include <QApplication>
 #include <QtWidgets/QMainWindow>
 #include <src/utils/SimulationSettings.h>
 #include <QtWidgets/QPushButton>
 #include <src/utils/Localizable.h>
 #include <QtWidgets/QHBoxLayout>
+#include <src/utils/Logging.h>
+#include <src/utils/utils.h>
 
 class BaseController : public QMainWindow {
     Q_OBJECT
@@ -33,7 +36,7 @@ protected:
 
     void addToParentLayout(QLayout *layout, int stretch = 0);
     void addToParentLayout(QWidget *widget, int stretch = 0);
-    void addWidgetsToLayout(QWidget &widgets, QLayout *layout);
+    void addWidgetsToLayout(QWidgets &widgets, QLayout *layout);
 
 private:
     QHBoxLayout *parentLayout;
