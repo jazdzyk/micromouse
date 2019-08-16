@@ -8,6 +8,7 @@
 
 #include <src/elements/RoundedPushButton.h>
 #include <src/elements/RadioButtonGroupBox.h>
+#include <src/elements/DropDownGroupBox.h>
 #include "BaseController.h"
 #include "src/utils/Logging.h"
 
@@ -22,6 +23,7 @@ private:
     RoundedPushButton *startSimulationButton;
     RadioButtonGroupBox *simulationModeBox;
     RadioButtonGroupBox *mazeSizeBox;
+    DropDownGroupBox *algorithmModeBox;
 };
 
 
