@@ -3,3 +3,11 @@
 //
 
 #include "StartController.h"
+
+StartController::StartController(QWidget *parent) : BaseController(parent) {
+    Log::print("StartController::StartController(*parent)");
+}
+
+StartController::~StartController() {
+    Log::print("StartController::~StartController()");
+}

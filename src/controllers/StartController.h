@@ -7,7 +7,9 @@
 
 
 #include <src/elements/RoundedPushButton.h>
+#include <src/elements/RadioButtonGroupBox.h>
 #include "BaseController.h"
+#include "src/utils/Logging.h"
 
 class StartController : public BaseController {
     Q_OBJECT
@@ -18,6 +20,8 @@ public:
 
 private:
     RoundedPushButton *startSimulationButton;
+    RadioButtonGroupBox *simulationModeBox;
+    RadioButtonGroupBox *mazeSizeBox;
 };
 
 
