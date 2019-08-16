@@ -9,7 +9,13 @@
 #include "BaseController.h"
 
 class StartController : public BaseController {
+    Q_OBJECT
 
+public:
+    explicit StartController(QWidget *parent = nullptr);
+    ~StartController();
+
+private:
 };
 
 
