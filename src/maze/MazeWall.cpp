@@ -103,7 +103,10 @@ QJsonObject MazeWall::serializeToJson() const {
     json.insert(JsonKeys::ACTIVE, this->active);
     json.insert(JsonKeys::BLOCKED, this->blocked);
     json.insert(JsonKeys::SIDE, static_cast<int>(this->side));
-    // TODO: serialize neighbour
+    if (this->neighbour) {
+        auto neighbour = *this->neighbour;
+        json.insert(JsonKeys::NEIGHBOUR, neighbour->serializeToJson());
+    }
 
     return json;
 }
@@ -113,7 +116,11 @@ void MazeWall::deserializeJson(const QJsonObject &json) {
     this->active = json[JsonKeys::ACTIVE].toBool();
     this->blocked = json[JsonKeys::BLOCKED].toBool();
     this->side = static_cast<WallSide>(json[JsonKeys::SIDE].toInt());
-    // TODO: deserialize neighbour
+    if (json.find(JsonKeys::NEIGHBOUR) == json.end()) {
+        this->neighbour.reset();
+    } else {
+        this->neighbour.emplace(new MazeField(json[JsonKeys::NEIGHBOUR].toObject()));
+    }
 }
 
 MazeWall::WallSide MazeWall::getOppositeSide() const {

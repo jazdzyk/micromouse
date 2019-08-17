@@ -18,10 +18,8 @@ namespace {
 
         // MazeField-related
         static Key TYPE;
-        static Key WALL;
+        static Key WALLS;
         static Key COORD;
-        static Key VERTICAL;
-        static Key HORIZONTAL;
         static Key LEFT;
         static Key RIGHT;
         static Key TOP;
@@ -31,7 +29,11 @@ namespace {
         static Key ACTIVE;
         static Key BLOCKED;
         static Key SIDE;
+        static Key NEIGHBOUR;
 
+        // Coordinate-related
+        static Key VERTICAL;
+        static Key HORIZONTAL;
     };
 
     // Maze-related
@@ -41,19 +43,22 @@ namespace {
 
     // MazeField-related
     JsonKeys::Key JsonKeys::TYPE = "TYPE";
-    JsonKeys::Key JsonKeys::WALL = "WALL";
+    JsonKeys::Key JsonKeys::WALLS = "WALLS";
     JsonKeys::Key JsonKeys::LEFT = "LEFT";
     JsonKeys::Key JsonKeys::RIGHT = "RIGHT";
     JsonKeys::Key JsonKeys::TOP = "TOP";
     JsonKeys::Key JsonKeys::BOTTOM = "BOTTOM";
     JsonKeys::Key JsonKeys::COORD = "COORD";
-    JsonKeys::Key JsonKeys::VERTICAL = "VERT";
-    JsonKeys::Key JsonKeys::HORIZONTAL = "HORIZ";
 
     // MazeWall-related
     JsonKeys::Key JsonKeys::ACTIVE = "ACTIVE";
     JsonKeys::Key JsonKeys::BLOCKED = "BLOCKED";
     JsonKeys::Key JsonKeys::SIDE = "SIDE";
+    JsonKeys::Key JsonKeys::NEIGHBOUR = "NEIGHBOUR";
+
+    // Coordinate-related
+    JsonKeys::Key JsonKeys::VERTICAL = "VERT";
+    JsonKeys::Key JsonKeys::HORIZONTAL = "HORIZ";
 }
 
 #endif //MICROMOUSE_JSONKEYS_H
