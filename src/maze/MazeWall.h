@@ -37,8 +37,8 @@ public:
 
     void removeWall();
 
-    static MazeWall *
-    createDefault(MazeWall::WallSide side, Coordinate &coordinate, MazeSize mazeSize, bool shouldBeActive);
+    static MazeWall *createDefault(MazeWall::WallSide side, Coordinate &coordinate,
+            MazeSize mazeSize, bool shouldBeActive);
 
     // Serializable methods
     [[nodiscard]] QJsonObject serializeToJson() const override;
