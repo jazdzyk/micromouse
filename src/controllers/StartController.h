@@ -10,10 +10,13 @@
 #include <src/elements/RadioButtonGroupBox.h>
 #include <src/elements/DropDownGroupBox.h>
 #include <src/elements/CheckButtonGroupBox.h>
+#include <src/protocols/delegates/ReturnToPreviousControllerDelegate.h>
 #include "BaseController.h"
 #include "src/utils/Logging.h"
+#include "SimulationController.h"
+#include "MazeController.h"
 
-class StartController : public BaseController {
+class StartController : public BaseController, public ReturnToPreviousControllerDelegate {
     Q_OBJECT
 
 public:
@@ -26,6 +29,24 @@ private:
     RadioButtonGroupBox *mazeSizeBox;
     DropDownGroupBox *algorithmModeBox;
     CheckButtonGroupBox *ownMazeBox;
+
+    void setUpUi();
+
+    template<typename Type>
+    void moveToNextController() {
+        auto *newController = new Type(this->simulationSettings, this);
+        newController->showFullScreen();
+        hide();
+    }
+
+    void onStartSimulationButtonClicked();
+    void onSimulationModeChanged(int id);
+    void onMazeSizeChanged(int id);
+    void onAlgorithmModeChanged(int dropDownId, int optionId);
+    void onCreateOwnMazeButtonClicked(int id);
+
+    // ReturnToPreviousControllerDelegate methods
+    void controllerWillReturn(BaseController *controller) override;
 };
 
 

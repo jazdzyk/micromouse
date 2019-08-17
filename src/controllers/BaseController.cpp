@@ -54,13 +54,13 @@ void BaseController::setUpUi() {
 
 void BaseController::createQuitButton() {
     Log::print("BaseController::createQuitButton()");
-    this->quitButton = createButton(QString(":/images/quit-mark.png"));
+    this->quitButton = createButton(QString(":/quit-mark"));
     connect(this->quitButton, SIGNAL(clicked()), QApplication::instance(), SLOT(quit()));
 }
 
 void BaseController::createReturnButton() {
     Log::print("BaseController::createReturnButton()");
-    this->returnButton = createButton(QString(":/images/return-mark.png"));
+    this->returnButton = createButton(QString(":/return-mark"));
 }
 
 QPushButton *BaseController::createButton(const QString &iconUrl) {

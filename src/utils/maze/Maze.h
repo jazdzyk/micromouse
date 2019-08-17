@@ -6,8 +6,12 @@
 #define MICROMOUSE_MAZE_H
 
 
+#include <src/utils/Enums.h>
+
 class Maze {
 
+public:
+    Maze(MazeSize size, SimulationMode mode) {};
 };
 
 

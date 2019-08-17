@@ -31,7 +31,7 @@ protected:
     QPushButton *quitButton;
     QPushButton *returnButton;
 
-    Localizable::Locale locale = Localizable::PL;
+    Localizable::Locale locale = Localizable::pl;
     SimulationSettings simulationSettings;
 
     void addToParentLayout(QLayout *layout, int stretch = 0);
