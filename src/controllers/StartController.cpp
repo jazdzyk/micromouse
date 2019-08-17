@@ -54,6 +54,7 @@ void StartController::setUpUi() {
             [this](int dropDownId, int optionId) {
                 this->onAlgorithmModeChanged(dropDownId, optionId);
             });
+    this->algorithmModeBox->setDropDownVisible(1, false);
 
     this->ownMazeBox = new CheckButtonGroupBox(
             this->locale[PL::OWN_MAZE_MODE_BOX_TITLE],
