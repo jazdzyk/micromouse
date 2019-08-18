@@ -7,11 +7,40 @@
 
 
 #include <src/utils/Enums.h>
+#include <vector>
+#include <functional>
+#include "MazeField.h"
+#include "RandomMazeGenerator.h"
+#include <cmath>
+#include <QtCore/QJsonArray>
 
-class Maze {
-
+class Maze : public Serializable {
 public:
-    Maze(MazeSize size, SimulationMode mode) {};
+    using MazeFields = std::vector<std::vector<MazeField *>>;
+    using IterateOverFieldsFunction = std::function<void(MazeField*)>;
+
+    Maze(MazeSize size, SimulationMode simulationMode, std::optional<const Maze::MazeFields> fields = {});
+    explicit Maze(const QJsonObject& json);
+    ~Maze() override;
+
+    [[nodiscard]] MazeSize getSize() const;
+    [[nodiscard]] SimulationMode getSimulationMode() const;
+    [[nodiscard]] MazeFields getFields() const;
+    MazeField* getFieldAt(Coordinate& coordinate) const;
+
+    void iterateOverAllFields(const IterateOverFieldsFunction& function) const;
+
+    // Serializable methods
+    [[nodiscard]] QJsonObject serializeToJson() const override;
+    void deserializeJson(const QJsonObject& json) override;
+
+private:
+    MazeSize size;
+    SimulationMode simulationMode;
+
+    MazeFields fields;
+
+    [[nodiscard]] MazeFields randomlyGenerateFields() const;
 };
 
 

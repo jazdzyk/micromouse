@@ -12,7 +12,7 @@ namespace {
         using Key = const QString;
 
         // Maze-related
-        static Key MAZE_MODE;
+        static Key MAZE_SIZE;
         static Key SIMULATION_MODE;
         static Key FIELDS;
 
@@ -37,7 +37,7 @@ namespace {
     };
 
     // Maze-related
-    JsonKeys::Key JsonKeys::MAZE_MODE = "MAZE_MODE";
+    JsonKeys::Key JsonKeys::MAZE_SIZE = "MAZE_SIZE";
     JsonKeys::Key JsonKeys::SIMULATION_MODE = "SIMULATION_MODE";
     JsonKeys::Key JsonKeys::FIELDS = "FIELDS";
 
