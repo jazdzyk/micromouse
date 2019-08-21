@@ -84,6 +84,5 @@ void Maze::deserializeJson(const QJsonObject &json) {
 
 Maze::MazeFields Maze::randomlyGenerateFields() const {
     Log::print("Maze::randomlyGenerateFields()");
-    // TODO: implement RandomMazeGenerator class
-//    return RandomMazeGenerator(this->size).generate();
+    return RandomMazeGenerator(this->size).generate();
 }

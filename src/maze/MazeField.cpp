@@ -54,7 +54,7 @@ void MazeField::toggleWallAt(MazeField::WallSide side) const {
     this->walls.at(side)->toggleActive();
 }
 
-void MazeField::removeWall(Coordinate &nextCoordinate) {
+void MazeField::removeWall(const Coordinate &nextCoordinate) {
     Log::print("MazeField::removeWall(&nextCoordinate)");
     auto diffCoord = this->coordinate - nextCoordinate;
 
@@ -82,6 +82,14 @@ MazeField *MazeField::getNeighbourAssociatedWithWallAt(MazeField::WallSide side)
 void MazeField::setNeighbourAssociatedWithWallAt(MazeField::WallSide side, MazeField *neighbour) const {
     Log::print("MazeField::setNeighbourAssociatedWithWallAt(side, *neighbour)");
     this->walls.at(side)->setNeighbour(neighbour);
+}
+
+bool MazeField::wasVisited() const {
+    return this->_wasVisited;
+}
+
+void MazeField::setVisited(bool visited) {
+    this->_wasVisited = visited;
 }
 
 QJsonObject MazeField::serializeToJson() const {

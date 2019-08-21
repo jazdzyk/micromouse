@@ -13,6 +13,7 @@
 #include "MazeWall.h"
 #include <src/utils/utils.h>
 #include <src/utils/JsonKeys.h>
+#include <cmath>
 
 class MazeField : public Serializable {
 public:
@@ -21,27 +22,32 @@ public:
 
     MazeField(Coordinate& coordinate, MazeSize mazeSize);
     MazeField(Coordinate &coordinate, MazeField::Walls walls);
-    MazeField(const QJsonObject& json);
-    ~MazeField();
+    explicit MazeField(const QJsonObject& json);
+    ~MazeField() override;
 
-    Coordinate getCoordinate() const;
+    [[nodiscard]] Coordinate getCoordinate() const;
 
-    MazeWall *getWallAt(WallSide side) const;
-    bool hasWallAt(WallSide side) const;
+    [[nodiscard]] MazeWall *getWallAt(WallSide side) const;
+    [[nodiscard]] bool hasWallAt(WallSide side) const;
     void setWallAt(MazeField::WallSide side, bool shouldBeActive) const;
     void toggleWallAt(WallSide side) const;
-    void removeWall(Coordinate& nextCoordinate);
+    void removeWall(const Coordinate &nextCoordinate);
 
-    MazeField *getNeighbourAssociatedWithWallAt(WallSide side) const;
+    [[nodiscard]] MazeField *getNeighbourAssociatedWithWallAt(WallSide side) const;
     void setNeighbourAssociatedWithWallAt(WallSide side, MazeField* neighbour) const;
 
+    [[nodiscard]] bool wasVisited() const;
+    void setVisited(bool visited);
+
     // Serializable methods
-    QJsonObject serializeToJson() const;
-    void deserializeJson(const QJsonObject& json);
+    [[nodiscard]] QJsonObject serializeToJson() const override;
+    void deserializeJson(const QJsonObject& json) override;
 
 private:
     Walls walls;
     Coordinate coordinate;
+
+    bool _wasVisited;
 
     void removeWall(WallSide side) const;
 };

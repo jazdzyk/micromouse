@@ -12,6 +12,8 @@ struct Coordinate : public Serializable {
     int vertical{};
     int horizontal{};
 
+    Coordinate(int vertical, int horizontal) : vertical(vertical), horizontal(horizontal) {}
+
     Coordinate operator-(const Coordinate& another) {
         Coordinate result;
 
