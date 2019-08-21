@@ -6,14 +6,14 @@
 
 #include <utility>
 
-MazeField::MazeField(Coordinate &coordinate, MazeSize mazeSize) : coordinate(coordinate) {
+MazeField::MazeField(const Coordinate &coordinate, MazeSize mazeSize) : coordinate(coordinate) {
     Log::print("MazeField::MazeField(&coordinate, mazeSize)");
     for (auto side : {WallSide::LEFT, WallSide::RIGHT, WallSide::TOP, WallSide::BOTTOM}) {
         this->walls.insert({side, MazeWall::createDefault(side, coordinate, mazeSize)});
     }
 }
 
-MazeField::MazeField(Coordinate &coordinate, MazeField::Walls walls) : coordinate(coordinate), walls(std::move(walls)) {
+MazeField::MazeField(const Coordinate &coordinate, MazeField::Walls walls) : coordinate(coordinate), walls(std::move(walls)) {
     Log::print("MazeField::MazeField(&walls, &coordinate)");
 }
 

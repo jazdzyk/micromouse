@@ -37,4 +37,11 @@ enum class Direction {
     RIGHT,
 };
 
+enum MazeFieldType {
+    ROBOT1_START,
+    ROBOT2_START,
+    END,
+    PLAIN
+};
+
 #endif //MICROMOUSE_ENUMS_H

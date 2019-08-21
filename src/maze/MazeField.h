@@ -20,8 +20,8 @@ public:
     using WallSide = Direction;
     using Walls = std::map<WallSide, MazeWall*>;
 
-    MazeField(Coordinate& coordinate, MazeSize mazeSize);
-    MazeField(Coordinate &coordinate, MazeField::Walls walls);
+    MazeField(const Coordinate &coordinate, MazeSize mazeSize);
+    MazeField(const Coordinate &coordinate, MazeField::Walls walls);
     explicit MazeField(const QJsonObject& json);
     ~MazeField() override;
 
