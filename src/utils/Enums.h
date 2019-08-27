@@ -7,7 +7,7 @@
 
 enum SimulationMode {
     ONE_ROBOT = 1,
-    TWO_ROBOT = 2,
+    TWO_ROBOTS = 2,
 };
 
 enum MazeSize {
