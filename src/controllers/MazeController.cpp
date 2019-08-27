@@ -152,7 +152,10 @@ void MazeController::onLoadButtonClicked() {
     if (this->simulationSettings.maze) {
         auto maze = *this->simulationSettings.maze;
         delete maze;
-        this->simulationSettings.maze.emplace(new Maze(this->simulationSettings.maze, false));
+        this->simulationSettings.maze.emplace(new Maze(loadedJsonDocument.object()));
+
+        delete this->mazeView;
+        this->mazeView = new MazeView(*this->simulationSettings.maze, false);
         setMazeHolder(this->mazeView);
     }
 }

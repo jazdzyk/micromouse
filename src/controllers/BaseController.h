@@ -21,7 +21,7 @@ class BaseController : public QMainWindow {
 public:
     explicit BaseController(QWidget *parent = nullptr);
     explicit BaseController(SimulationSettings &simulationSettings, QWidget *parent = nullptr);
-    ~BaseController();
+    ~BaseController() override;
 
     void setSimulationSettings(SimulationSettings &simulationSettings);
 

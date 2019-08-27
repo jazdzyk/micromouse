@@ -7,11 +7,13 @@
 
 
 #include "JsonKeys.h"
+#include "src/protocols/Serializable.h"
 
-struct Coordinate : public Serializable {
-    int vertical{};
-    int horizontal{};
+struct Coordinate : Serializable {
+    int vertical;
+    int horizontal;
 
+    Coordinate() : vertical(0), horizontal(0) {}
     Coordinate(int vertical, int horizontal) : vertical(vertical), horizontal(horizontal) {}
 
     Coordinate operator-(const Coordinate& another) {

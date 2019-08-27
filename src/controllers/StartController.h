@@ -16,12 +16,12 @@
 #include "SimulationController.h"
 #include "MazeController.h"
 
-class StartController : public BaseController, public ReturnToPreviousControllerDelegate {
+class StartController : public BaseController, public MazeControllerDelegate, public ReturnToPreviousControllerDelegate {
     Q_OBJECT
 
 public:
     explicit StartController(QWidget *parent = nullptr);
-    ~StartController();
+    ~StartController() override;
 
 private:
     RoundedPushButton *startSimulationButton;
@@ -33,8 +33,7 @@ private:
     void setUpUi();
 
     template<typename Type>
-    void moveToNextController() {
-        auto *newController = new Type(this->simulationSettings, this);
+    void moveToNextController(Type *newController) {
         newController->showFullScreen();
         hide();
     }
@@ -44,6 +43,9 @@ private:
     void onMazeSizeChanged(int id);
     void onAlgorithmModeChanged(int dropDownId, int optionId);
     void onCreateOwnMazeButtonClicked(int id);
+
+    // MazeControllerDelegate methods
+    void mazeControllerDidAcceptMaze(BaseController *controller, SimulationSettings &simulationSettings) override;
 
     // ReturnToPreviousControllerDelegate methods
     void controllerWillReturn(BaseController *controller) override;

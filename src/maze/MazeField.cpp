@@ -74,7 +74,7 @@ void MazeField::removeWall(const Coordinate &nextCoordinate) {
     removeWall(wallSide);
 }
 
-MazeField *MazeField::getNeighbourAssociatedWithWallAt(MazeField::WallSide side) const {
+std::optional<MazeField *> MazeField::getNeighbourAssociatedWithWallAt(MazeField::WallSide side) const {
     Log::print("MazeField::getNeighbourAssociatedWithWallAt(side)");
     return this->walls.at(side)->getNeighbour();
 }

@@ -27,12 +27,12 @@ bool MazeWall::isBlocked() const {
 }
 
 void MazeWall::setActive(bool active) {
-    Log::print("MazeWall::setActive(active: " + (active ? "true" : "false") + ")");
+    Log::print("MazeWall::setActive(active)");
     this->active = active;
 }
 
 void MazeWall::setBlocked(bool blocked) {
-    Log::print("MazeWall::setBlocked(blocked: " + (blocked ? "true" : "false") + ")");
+    Log::print("MazeWall::setBlocked(blocked)");
     if (!this->blocked) {
         this->blocked = blocked;
     }
@@ -48,7 +48,7 @@ MazeWall::WallSide MazeWall::getSide() const {
     return this->side;
 }
 
-MazeWall::WallSide MazeWall::getNeighbourWallAt(MazeWall::WallSide side) const {
+std::optional<MazeWall *> MazeWall::getNeighbourWallAt(MazeWall::WallSide side) const {
     Log::print("MazeWall::getNeighbourWallAt(side)");
     if (this->neighbour) {
         auto field = *this->neighbour;
@@ -85,7 +85,7 @@ void MazeWall::removeWall() {
     }
 }
 
-MazeWall *MazeWall::createDefault(MazeWall::WallSide side, Coordinate &coordinate, MazeSize mazeSize,
+MazeWall *MazeWall::createDefault(MazeWall::WallSide side, const Coordinate &coordinate, MazeSize mazeSize,
                                   bool shouldBeActive) {
     Log::print("MazeWall::createDefault(side, &coordinate, mazeSize)");
     auto shouldBeBlocked = (coordinate.vertical == 0 && side == WallSide::LEFT) ||

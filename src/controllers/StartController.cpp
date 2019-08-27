@@ -93,10 +93,10 @@ void StartController::setUpUi() {
 void StartController::onStartSimulationButtonClicked() {
     Log::print("StartController::onStartSimulationButtonClicked()");
     if (!this->ownMazeBox->isChosen(0)) {
-        this->simulationSettings.maze.emplace(Maze(this->simulationSettings.mazeSize,
+        this->simulationSettings.maze.emplace(new Maze(this->simulationSettings.mazeSize,
                                                  this->simulationSettings.simulationMode));
     }
-    moveToNextController<SimulationController>();
+    moveToNextController<SimulationController>(new SimulationController(this->simulationSettings, this));
 }
 
 void StartController::onSimulationModeChanged(int id) {
@@ -137,7 +137,11 @@ void StartController::onAlgorithmModeChanged(int dropDownId, int optionId) {
 
 void StartController::onCreateOwnMazeButtonClicked(int id) {
     Log::print("StartController::onCreateOwnMazeButtonClicked(id: " + std::to_string(id) + ")");
-    moveToNextController<MazeController>();
+    moveToNextController<MazeController>(new MazeController(this->simulationSettings, this, this));
+}
+
+void StartController::mazeControllerDidAcceptMaze(BaseController *controller, SimulationSettings &simulationSettings) {
+    Log::print("StartController::mazeControllerDidAcceptMaze(*controller, &simulationSettings)");
 }
 
 void StartController::controllerWillReturn(BaseController *controller) {

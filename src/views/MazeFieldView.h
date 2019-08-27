@@ -1,6 +1,7 @@
 //
 // Created by Kuba Jazdzyk on 8/21/19.
 //
+#pragma once
 
 #ifndef MICROMOUSE_MAZEFIELDVIEW_H
 #define MICROMOUSE_MAZEFIELDVIEW_H
@@ -10,6 +11,8 @@
 #include <src/utils/Coordinate.h>
 #include <src/utils/Enums.h>
 #include <src/protocols/delegates/MazeFieldViewDelegate.h>
+#include <QApplication>
+#include <QDesktopWidget>
 
 class MazeFieldView : public QLabel {
     Q_OBJECT

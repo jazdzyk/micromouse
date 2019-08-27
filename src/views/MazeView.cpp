@@ -2,7 +2,6 @@
 // Created by Kuba Jazdzyk on 8/17/19.
 //
 
-#include <QtCore/QEventLoop>
 #include "MazeView.h"
 
 MazeView::MazeView(MazeSize mazeSize, SimulationMode simulationMode, std::optional<MazeViewDelegate *> delegate)
@@ -127,8 +126,8 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
         auto delegate = *this->delegate;
         delegate->robotDidMove(0, Direction::TOP);
     }
-    auto newCoordinate = this->currentRobotField->getMazeField()
-            ->getNeighbourAssociatedWithWallAt(wallSide)->getCoordinate();
+    auto newCoordinate = (*this->currentRobotField->getMazeField()
+            ->getNeighbourAssociatedWithWallAt(wallSide))->getCoordinate();
     auto currentRotation = this->currentRobotField->getCurrentRobotRotationAngle();
     moveRobot(newCoordinate, currentRotation);
 
@@ -209,7 +208,7 @@ void MazeView::createPredefinedUi(const MazeView::MazeFields &mazeFields, bool w
     showRobots(withRobot, withRobot);
 }
 
-void MazeView::createBoard(std::optional<const MazeFields *> mazeFields) {
+void MazeView::createBoard(std::optional<const MazeFields> mazeFields) {
     Log::print("MazeView::createBoard(mazeFields?)");
     auto mazeLength = getMazeLength() + 1;
     for (auto x = 0; x < mazeLength; ++x) {
@@ -217,7 +216,7 @@ void MazeView::createBoard(std::optional<const MazeFields *> mazeFields) {
         for (auto y = 0; y < mazeLength; ++y) {
             MazeFieldView *fieldView;
             if (mazeFields) {
-                fieldView = new MazeFieldView((*mazeFields)->at(y)[x], this->mazeSize, this);
+                fieldView = new MazeFieldView((*mazeFields).at(y)[x], this->mazeSize, this);
             } else {
                 fieldView = new MazeFieldView(Coordinate(x, y), this->mazeSize, this);
             }

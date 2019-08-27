@@ -11,6 +11,9 @@
 #include <src/maze/Maze.h>
 #include "src/protocols/delegates/MazeViewDelegate.h"
 #include "MazeFieldView.h"
+#include <QtCore/QEventLoop>
+#include <QTime>
+#include <QApplication>
 
 class MazeView : public QGridLayout, public MazeFieldViewDelegate {
 public:
@@ -52,7 +55,7 @@ private:
 
     void createEmptyUi();
     void createPredefinedUi(const MazeFields& mazeFields, bool withRobot);
-    void createBoard(std::optional<const MazeFields *> mazeFields = {});
+    void createBoard(std::optional<const MazeFields> mazeFields = {});
 
     void moveRobot(const Coordinate& coordinate, int rotation);
     void showRobots(bool withRobot1, bool withRobot2);

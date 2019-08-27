@@ -7,7 +7,7 @@
 
 #include <optional>
 #include <utility>
-#include <src/utils/maze/Maze.h>
+#include <src/maze/Maze.h>
 #include "Enums.h"
 
 struct SimulationSettings {
@@ -16,7 +16,7 @@ struct SimulationSettings {
     SimulationMode simulationMode;
     MazeSize mazeSize;
     RobotAlgorithms robotAlgorithms;
-    std::optional<Maze> maze;
+    std::optional<Maze *> maze;
 
     SimulationSettings() :
         simulationMode(::ONE_ROBOT),

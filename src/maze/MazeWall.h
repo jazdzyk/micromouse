@@ -1,6 +1,7 @@
 //
 // Created by Kuba Jazdzyk on 8/17/19.
 //
+#pragma once
 
 #ifndef MICROMOUSE_MAZEWALL_H
 #define MICROMOUSE_MAZEWALL_H
@@ -11,8 +12,10 @@
 #include <optional>
 #include <src/utils/Logging.h>
 #include <src/utils/Coordinate.h>
-#include "MazeField.h"
 #include <utility>
+#include "MazeField.h"
+
+class MazeField;
 
 class MazeWall : public Serializable {
 public:
@@ -32,13 +35,13 @@ public:
     void setSide(WallSide side);
 
     [[nodiscard]] const NeighbourField &getNeighbour() const;
-    [[nodiscard]] WallSide getNeighbourWallAt(WallSide side) const;
+    [[nodiscard]] std::optional<MazeWall *> getNeighbourWallAt(WallSide side) const;
     void setNeighbour(const NeighbourField &neighbour);
 
     void removeWall();
 
-    static MazeWall *createDefault(MazeWall::WallSide side, Coordinate &coordinate,
-            MazeSize mazeSize, bool shouldBeActive = false);
+    static MazeWall *createDefault(MazeWall::WallSide side, const Coordinate &coordinate,
+                                   MazeSize mazeSize, bool shouldBeActive = false);
 
     // Serializable methods
     [[nodiscard]] QJsonObject serializeToJson() const override;
@@ -50,7 +53,7 @@ private:
     WallSide side;
     NeighbourField neighbour;
 
-    WallSide getOppositeSide() const;
+    [[nodiscard]] WallSide getOppositeSide() const;
 };
 
 

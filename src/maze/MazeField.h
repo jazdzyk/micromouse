@@ -15,6 +15,8 @@
 #include <src/utils/JsonKeys.h>
 #include <cmath>
 
+class MazeWall;
+
 class MazeField : public Serializable {
 public:
     using WallSide = Direction;
@@ -33,7 +35,7 @@ public:
     void toggleWallAt(WallSide side) const;
     void removeWall(const Coordinate &nextCoordinate);
 
-    [[nodiscard]] MazeField *getNeighbourAssociatedWithWallAt(WallSide side) const;
+    [[nodiscard]] std::optional<MazeField *> getNeighbourAssociatedWithWallAt(WallSide side) const;
     void setNeighbourAssociatedWithWallAt(WallSide side, MazeField* neighbour) const;
 
     [[nodiscard]] bool wasVisited() const;
