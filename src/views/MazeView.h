@@ -19,15 +19,15 @@ public:
     using IterateOverFieldsFunction = std::function<void(MazeFieldView*)>;
 
     MazeView(MazeSize mazeSize, SimulationMode simulationMode, std::optional<MazeViewDelegate *> delegate = {});
-    MazeView(Maze *maze, bool withRobot = true, std::optional<MazeViewDelegate *> delegate = {});
+    explicit MazeView(Maze *maze, bool withRobot = true, std::optional<MazeViewDelegate *> delegate = {});
     ~MazeView() override;
 
     void setEnabled(bool enabled) const;
-    Maze* getMaze() const;
+    [[nodiscard]] Maze* getMaze() const;
 
     WallSurrounding moveRobotTo(int robotId, RobotMovement movement);
     WallSurrounding moveRobotToStart(int robotId);
-    Coordinate getCurrentRobotCoordinate() const;
+    [[nodiscard]] Coordinate getCurrentRobotCoordinate() const;
 
     void showMazeExit() const;
     void showMazeEntry() const;
@@ -57,7 +57,7 @@ private:
     void moveRobot(const Coordinate& coordinate, int rotation);
     void showRobots(bool withRobot1, bool withRobot2);
 
-    int getMazeLength() const;
+    [[nodiscard]] int getMazeLength() const;
 
     // MazeFieldViewDelegate method
     void mazeFieldWallDidSet(const MazeFieldViewInfo &info) override;
