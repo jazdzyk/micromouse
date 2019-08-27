@@ -24,7 +24,7 @@ public:
                             std::optional<MazeControllerDelegate *> mazeControllerDelegate,
                             std::optional<ReturnToPreviousControllerDelegate *> returnDelegate,
                             QWidget *parent = nullptr);
-    ~MazeController();
+    ~MazeController() override;
 
 private:
     using MazeHolder = QStackedLayout;

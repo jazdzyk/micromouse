@@ -3,17 +3,19 @@
 //
 
 #include <QtWidgets/QFileDialog>
+#include <utility>
+#include <QtCore/QJsonDocument>
 #include "MazeController.h"
 
 using namespace Localizable;
 
 MazeController::MazeController(SimulationSettings &simulationSettings,
                                std::optional<MazeControllerDelegate *> mazeControllerDelegate,
-                               std::optional<ReturnToPreviousControllerDelegate *> returnDelegate, QWidget *parent) {
+                               std::optional<ReturnToPreviousControllerDelegate *> returnDelegate, QWidget *parent)
+        : BaseController(simulationSettings, parent),
+          mazeControllerDelegate(std::move(mazeControllerDelegate)),
+          returnDelegate(std::move(returnDelegate)) {
     Log::print("MazeController::MazeController(&simulationSettings, returnDelegate?, *parent)");
-    this->mazeControllerDelegate = std::move(mazeControllerDelegate);
-    this->returnDelegate = std::move(returnDelegate);
-
     setUpUi();
 }
 
@@ -95,7 +97,11 @@ void MazeController::setMazeHolder(MazeView *mazeView) {
 
 void MazeController::onAcceptButtonClicked() {
     Log::print("MazeController::onAcceptButtonClicked()");
-    // TODO: implement
+    this->simulationSettings.maze.emplace(this->mazeView->getMaze());
+    if (this->mazeControllerDelegate) {
+        auto delegate = *this->mazeControllerDelegate;
+        delegate->mazeControllerDidAcceptMaze(this, this->simulationSettings);
+    }
 }
 
 void MazeController::onSaveButtonClicked() {
@@ -117,7 +123,9 @@ void MazeController::onSaveButtonClicked() {
         return;
     }
 
-    // TODO: maze creation, JSON serialization
+    QJsonDocument jsonDocument(this->mazeView->getMaze()->serializeToJson());
+    saveFile.write(jsonDocument.toBinaryData());
+    saveFile.close();
 }
 
 void MazeController::onLoadButtonClicked() {
@@ -135,11 +143,18 @@ void MazeController::onLoadButtonClicked() {
 
     QFile loadFile(fileName);
     if (!loadFile.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open load file.")
+        qWarning("Couldn't open load file.");
         return;
     }
 
-    // TODO: loading maze from JSON, updating maze view
+    auto loadedJsonDocument = QJsonDocument::fromBinaryData(loadFile.readAll());
+
+    if (this->simulationSettings.maze) {
+        auto maze = *this->simulationSettings.maze;
+        delete maze;
+        this->simulationSettings.maze.emplace(new Maze(this->simulationSettings.maze, false));
+        setMazeHolder(this->mazeView);
+    }
 }
 
 void MazeController::onReturnButtonClicked() {

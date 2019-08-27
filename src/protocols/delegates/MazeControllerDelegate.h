@@ -9,6 +9,7 @@
 #include <src/controllers/BaseController.h>
 
 class MazeControllerDelegate {
+public:
     virtual void mazeControllerDidAcceptMaze(BaseController *controller, SimulationSettings& simulationSettings) = 0;
     virtual ~MazeControllerDelegate() = default;
 };
