@@ -13,6 +13,7 @@
 #include <src/protocols/delegates/MazeFieldViewDelegate.h>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMouseEvent>
 
 class MazeFieldView : public QLabel {
     Q_OBJECT
@@ -36,9 +37,6 @@ public:
     void resetCurrentRobotRotationWith(int angle);
     [[nodiscard]] int getCurrentRobotRotationAngle() const;
 
-signals:
-    void clicked(WallSide side, const Coordinate& coordinate);
-
 private:
     std::optional<MazeFieldViewDelegate *> delegate;
 
@@ -51,12 +49,12 @@ private:
 
     int currentRobotRotation;
 
-    void updateBorders() const;
-    [[nodiscard]] bool isEdgeSize(WallSide side) const;
+    void updateBorders();
+    [[nodiscard]] bool isEdgeSide(WallSide side) const;
 
     [[nodiscard]] int calculateMazeSideLength() const;
 
-    void paintFieldIfNeeded() const;
+    void paintFieldIfNeeded();
 
     void mousePressEvent(QMouseEvent *event) override;
 };
