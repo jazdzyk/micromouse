@@ -109,7 +109,7 @@ void MazeController::onSaveButtonClicked() {
     auto fileName = QFileDialog::getSaveFileName(
             this,
             this->locale[PL::SAVE_FILE_DIALOG_TEXT],
-            "",
+            "maze.dat",
             this->locale[PL::MAZE_BINARY_FILE_DESCRIPTION]
     );
 
@@ -152,12 +152,12 @@ void MazeController::onLoadButtonClicked() {
     if (this->simulationSettings.maze) {
         auto maze = *this->simulationSettings.maze;
         delete maze;
-        this->simulationSettings.maze.emplace(new Maze(loadedJsonDocument.object()));
-
-        delete this->mazeView;
-        this->mazeView = new MazeView(*this->simulationSettings.maze, false);
-        setMazeHolder(this->mazeView);
     }
+
+    this->simulationSettings.maze.emplace(new Maze(loadedJsonDocument.object()));
+    delete this->mazeView;
+    this->mazeView = new MazeView(*this->simulationSettings.maze, false);
+    setMazeHolder(this->mazeView);
 }
 
 void MazeController::onReturnButtonClicked() {

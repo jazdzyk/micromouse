@@ -27,7 +27,7 @@ public:
     ~MazeFieldView() override;
 
     void setEnabled(bool enabled);
-    void setBorder(WallSide side, bool border) const;
+    void setBorder(WallSide side, bool border);
     void setFieldType(MazeFieldType type);
 
     [[nodiscard]] MazeField* getMazeField() const;

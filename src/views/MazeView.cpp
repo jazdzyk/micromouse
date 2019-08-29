@@ -8,16 +8,20 @@ MazeView::MazeView(MazeSize mazeSize, SimulationMode simulationMode, std::option
         : QGridLayout(), mazeSize(mazeSize), simulationMode(simulationMode), delegate(std::move(delegate)) {
     Log::print("MazeView::MazeView(mazeSize, simulationMode, delegate?)");
     createEmptyUi();
+    buildMaze();
 }
 
 MazeView::MazeView(Maze *maze, bool withRobot, std::optional<MazeViewDelegate *> delegate)
         : QGridLayout(), delegate(std::move(delegate)) {
     Log::print("MazeView::MazeView(*maze, withRobot, delegate?)");
-    //
     this->mazeSize = maze->getSize();
     this->simulationMode = maze->getSimulationMode();
-    //
+
     createPredefinedUi(maze->getFields(), withRobot);
+    showMazeExit();
+    showMazeEntry();
+
+    this->maze = maze;
 }
 
 MazeView::~MazeView() {
@@ -174,9 +178,9 @@ void MazeView::showMazeExit() const {
 void MazeView::showMazeEntry() const {
     Log::print("MazeView::showMazeEntry()");
     auto mazeLength = getMazeLength();
-    this->mazeBoard[0][mazeLength]->setFieldType(MazeFieldType::ROBOT1_START);
+    this->mazeBoard[mazeLength][0]->setFieldType(MazeFieldType::ROBOT1_START);
     if (this->simulationMode == SimulationMode::TWO_ROBOTS) {
-        this->mazeBoard[mazeLength][0]->setFieldType(MazeFieldType::ROBOT2_START);
+        this->mazeBoard[0][mazeLength]->setFieldType(MazeFieldType::ROBOT2_START);
     }
 }
 
@@ -211,14 +215,14 @@ void MazeView::createPredefinedUi(const MazeView::MazeFields &mazeFields, bool w
 void MazeView::createBoard(std::optional<const MazeFields> mazeFields) {
     Log::print("MazeView::createBoard(mazeFields?)");
     auto mazeLength = getMazeLength() + 1;
-    for (auto x = 0; x < mazeLength; ++x) {
+    for (auto y = 0; y < mazeLength; ++y) {
         FieldsRow _temp;
-        for (auto y = 0; y < mazeLength; ++y) {
+        for (auto x = 0; x < mazeLength; ++x) {
             MazeFieldView *fieldView;
             if (mazeFields) {
-                fieldView = new MazeFieldView((*mazeFields).at(y)[x], this->mazeSize, this);
+                fieldView = new MazeFieldView((*mazeFields).at(x)[y], this->mazeSize, this);
             } else {
-                fieldView = new MazeFieldView(Coordinate(x, y), this->mazeSize, this);
+                fieldView = new MazeFieldView(Coordinate(y, x), this->mazeSize, this);
             }
             addWidget(fieldView, y, x, 1, 1);
             _temp.push_back(fieldView);
@@ -226,6 +230,21 @@ void MazeView::createBoard(std::optional<const MazeFields> mazeFields) {
         this->mazeBoard.push_back(_temp);
     }
     setSpacing(0);
+}
+
+void MazeView::buildMaze() {
+    Log::print("MazeView::buildMaze()");
+    Maze::MazeFields mazeFields;
+
+    auto size = this->mazeBoard.size();
+    for (auto y = 0; y < size; ++y) {
+        std::vector<MazeField *> _tempFields;
+        for (auto x = 0; x < size; ++x) {
+            _tempFields.push_back(this->mazeBoard[y][x]->getMazeField());
+        }
+        mazeFields.push_back(_tempFields);
+    }
+    this->maze = new Maze(this->mazeSize, this->simulationMode, mazeFields);
 }
 
 void MazeView::moveRobot(const Coordinate &coordinate, int rotation) {
@@ -254,29 +273,30 @@ int MazeView::getMazeLength() const {
 
 void MazeView::mazeFieldWallDidSet(const MazeFieldViewDelegate::MazeFieldViewInfo &info) {
     Log::print("MazeView::mazeFieldWallDidSet(&info)");
+    auto mazeLength = getMazeLength();
     for (const auto &_info : info) {
         switch (_info.wallSide) {
             case WallSide::LEFT:
                 if (_info.coordinate.horizontal != 0) {
-                    this->mazeBoard[_info.coordinate.horizontal - 1][_info.coordinate.vertical]->setBorder(
+                    this->mazeBoard[_info.coordinate.vertical][_info.coordinate.horizontal - 1]->setBorder(
                             WallSide::RIGHT, _info.shouldBeSet);
                 }
                 break;
             case WallSide::RIGHT:
-                if (_info.coordinate.horizontal != (this->mazeSize - 1)) {
-                    this->mazeBoard[_info.coordinate.horizontal + 1][_info.coordinate.vertical]->setBorder(
+                if (_info.coordinate.horizontal != mazeLength) {
+                    this->mazeBoard[_info.coordinate.vertical][_info.coordinate.horizontal + 1]->setBorder(
                             WallSide::LEFT, _info.shouldBeSet);
                 }
                 break;
             case WallSide::TOP:
                 if (_info.coordinate.vertical != 0) {
-                    this->mazeBoard[_info.coordinate.horizontal][_info.coordinate.vertical - 1]->setBorder(
+                    this->mazeBoard[_info.coordinate.vertical - 1][_info.coordinate.horizontal]->setBorder(
                             WallSide::BOTTOM, _info.shouldBeSet);
                 }
                 break;
             case WallSide::BOTTOM:
-                if (_info.coordinate.vertical != this->mazeSize - 1) {
-                    this->mazeBoard[_info.coordinate.horizontal][_info.coordinate.vertical + 1]->setBorder(
+                if (_info.coordinate.vertical != mazeLength) {
+                    this->mazeBoard[_info.coordinate.vertical + 1][_info.coordinate.horizontal]->setBorder(
                             WallSide::TOP, _info.shouldBeSet);
                 }
                 break;

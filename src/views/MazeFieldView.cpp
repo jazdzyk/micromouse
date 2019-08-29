@@ -14,7 +14,7 @@ MazeFieldView::MazeFieldView(const Coordinate &coordinate, MazeSize mazeSize,
 }
 
 MazeFieldView::MazeFieldView(MazeField *mazeField, MazeSize mazeSize, std::optional<MazeFieldViewDelegate *> delegate)
-        : QLabel(), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)) {
+        : QLabel(), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)), fieldType(::PLAIN) {
     Log::print("MazeFieldView::MazeFieldView(*mazeField, mazeSize, delegate?)");
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setEnabled(true);
@@ -31,7 +31,7 @@ void MazeFieldView::setEnabled(bool enabled) {
     updateBorders();
 }
 
-void MazeFieldView::setBorder(MazeFieldView::WallSide side, bool border) const {
+void MazeFieldView::setBorder(MazeFieldView::WallSide side, bool border) {
     Log::print("MazeFieldView::setBorder(side, border)");
     this->mazeField->setWallAt(side, border);
     updateBorders();
@@ -129,7 +129,7 @@ bool MazeFieldView::isEdgeSide(MazeFieldView::WallSide side) const {
 }
 
 int MazeFieldView::calculateMazeSideLength() const {
-    Log::print("RandomMazeGenerator::calculateMazeSideLength()");
+    Log::print("MazeFieldView::calculateMazeSideLength()");
     return static_cast<int>(sqrt(static_cast<int>(this->mazeSize)));
 }
 

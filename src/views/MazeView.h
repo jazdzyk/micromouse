@@ -56,6 +56,7 @@ private:
     void createEmptyUi();
     void createPredefinedUi(const MazeFields& mazeFields, bool withRobot);
     void createBoard(std::optional<const MazeFields> mazeFields = {});
+    void buildMaze();
 
     void moveRobot(const Coordinate& coordinate, int rotation);
     void showRobots(bool withRobot1, bool withRobot2);

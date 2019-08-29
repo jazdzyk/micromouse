@@ -57,11 +57,11 @@ QJsonObject Maze::serializeToJson() const {
     json.insert(JsonKeys::MAZE_SIZE, static_cast<int>(this->size));
     json.insert(JsonKeys::SIMULATION_MODE, static_cast<int>(this->simulationMode));
 
-    QJsonArray jsonFields;
-    iterateOverAllFields([jsonFields](MazeField* field) mutable {
-        jsonFields.append(field->serializeToJson());
+    auto *jsonFields = new QJsonArray();
+    iterateOverAllFields([jsonFields](MazeField* field) {
+        jsonFields->append(field->serializeToJson());
     });
-    json.insert(JsonKeys::FIELDS, jsonFields);
+    json.insert(JsonKeys::FIELDS, *jsonFields);
 
     return json;
 }
@@ -72,13 +72,12 @@ void Maze::deserializeJson(const QJsonObject &json) {
     this->simulationMode = static_cast<SimulationMode>(json[JsonKeys::SIMULATION_MODE].toInt());
 
     auto jsonFields = json[JsonKeys::FIELDS].toArray();
-    auto counter = 0, rowCount = -1, maxInRowCount = static_cast<int>(sqrt(static_cast<int>(this->size)));
+    auto maxInRowCount = static_cast<int>(sqrt(static_cast<int>(this->size)));
+    this->fields = std::vector<std::vector<MazeField *>>(maxInRowCount, std::vector<MazeField *>(maxInRowCount));
     for (auto field : jsonFields) {
-        if (counter++ % maxInRowCount == 0) {
-            this->fields.push_back(std::vector<MazeField *>());
-            rowCount++;
-        }
-        this->fields[rowCount].push_back(new MazeField(field.toObject()));
+        auto currentField = new MazeField(field.toObject());
+        auto currentCoordinate = currentField->getCoordinate();
+        this->fields[currentCoordinate.horizontal][currentCoordinate.vertical] = currentField;
     }
 }
 
