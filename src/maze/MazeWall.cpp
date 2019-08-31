@@ -28,16 +28,15 @@ bool MazeWall::isBlocked() const {
 
 void MazeWall::setActive(bool active) {
     Log::print("MazeWall::setActive(active)");
-    this->active = active;
+    if (!this->blocked) {
+        this->active = active;
+    }
 }
 
 void MazeWall::setBlocked(bool blocked) {
     Log::print("MazeWall::setBlocked(blocked)");
-    if (!this->blocked) {
-        this->blocked = blocked;
-    }
+    this->blocked = blocked;
 }
-
 void MazeWall::toggleActive() {
     Log::print("MazeWall::toggleActive()");
     setActive(!this->active);

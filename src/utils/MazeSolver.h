@@ -11,13 +11,14 @@
 #include <functional>
 #include "Enums.h"
 
-template<RobotAlgorithm algorithm, int distanceThreshold>
+template<int distanceThreshold>
 class MazeSolver {
 public:
     using WallSide = MazeWall::WallSide;
     using DistanceMeasurement = std::map<WallSide, double>;
 
-    MazeSolver() {
+    explicit MazeSolver(RobotAlgorithm algorithm) {
+        Log::print("MazeSolver::MazeSolver(algorithm)");
         switch (algorithm) {
             case RobotAlgorithm::LEFT_WALL_FOLLOWER:
                 this->solverAlgorithm = leftWallFollower;
@@ -35,6 +36,7 @@ public:
     }
 
     [[nodiscard]] RobotMovement solve(const DistanceMeasurement &measurement) const {
+        Log::print("MazeSolver::solve(&measurement)");
         return this->solverAlgorithm(measurement);
     }
 
@@ -42,6 +44,7 @@ private:
     std::function<RobotMovement(DistanceMeasurement &)> solverAlgorithm;
 
     static RobotMovement leftWallFollower(DistanceMeasurement &measurement) {
+        Log::print("MazeSolver::leftWallFollower(&measurement)");
         if (measurement[WallSide::LEFT] > distanceThreshold) {
             return RobotMovement::LEFT;
         } else if (measurement[WallSide::TOP] > distanceThreshold) {
@@ -54,6 +57,7 @@ private:
     }
 
     static RobotMovement rightWallFollower(DistanceMeasurement &measurement) {
+        Log::print("MazeSolver::rightWallFollower(&measurement)");
         if (measurement[WallSide::RIGHT] > distanceThreshold) {
             return RobotMovement::RIGHT;
         } else if (measurement[WallSide::TOP] > distanceThreshold) {
@@ -66,6 +70,7 @@ private:
     }
 
     static RobotMovement bruteForce(DistanceMeasurement &measurement) {
+        Log::print("MazeSolver::bruteForce(&measurement)");
         // TODO: probably something does not work as it should
         if (measurement[WallSide::TOP] > distanceThreshold && measurement[WallSide::LEFT] > distanceThreshold &&
             measurement[WallSide::RIGHT] > distanceThreshold) {
@@ -84,7 +89,8 @@ private:
         }
     }
 
-    static RobotMovement wavePropagation(const DistanceMeasurement &measurement) {
+    static RobotMovement wavePropagation(DistanceMeasurement &measurement) {
+        Log::print("MazeSolver::wavePropagation(&measurement)");
         return RobotMovement::LEFT;
     }
 };

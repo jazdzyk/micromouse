@@ -27,6 +27,7 @@ public:
 
     bool isActive() const;
     bool isBlocked() const;
+
     void setActive(bool active);
     void setBlocked(bool blocked);
     void toggleActive();
@@ -50,6 +51,7 @@ public:
 private:
     bool active;
     bool blocked;
+
     WallSide side;
     NeighbourField neighbour;
 
