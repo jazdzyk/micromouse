@@ -37,7 +37,7 @@ Maze::MazeFields Maze::getFields() const {
     return this->fields;
 }
 
-MazeField *Maze::getFieldAt(Coordinate &coordinate) const {
+MazeField *Maze::getFieldAt(const Coordinate &coordinate) const {
     Log::print("Maze::getFieldAt(Coordinate &coordinate)");
     return this->fields[coordinate.vertical][coordinate.horizontal];
 }

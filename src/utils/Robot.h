@@ -23,11 +23,11 @@ public:
     using Surrounding = std::map<WallSide, MazeWall *>;
     using SensorsValues = std::map<WallSide, double>;
 
-    Robot(RobotAlgorithm algorithm, Coordinate startPosition, int id,
+    Robot(int id, RobotAlgorithm algorithm, Coordinate startPosition,
           std::optional<RobotDelegate *> delegate = {}) : mazeSolver(new MazeSolver<mazeFieldSize>(algorithm)),
                                                           currentPosition(std::move(startPosition)),
                                                           delegate(std::move(delegate)), id(id) {
-        Log::print("Robot::Robot(algorithm, &startPosition, id: " + std::to_string(id) + ", delegate?)");
+        Log::print("Robot::Robot(id: " + std::to_string(id) + ", algorithm, &startPosition, delegate?)");
         this->leftSensor = new DistanceSensor<12, 20>(WallSide::LEFT);
         this->rightSensor = new DistanceSensor<12, 20>(WallSide::RIGHT);
         this->frontSensor = new DistanceSensor<12, 20>(WallSide::TOP);

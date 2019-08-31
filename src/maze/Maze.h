@@ -26,7 +26,7 @@ public:
     [[nodiscard]] MazeSize getSize() const;
     [[nodiscard]] SimulationMode getSimulationMode() const;
     [[nodiscard]] MazeFields getFields() const;
-    MazeField* getFieldAt(Coordinate& coordinate) const;
+    MazeField* getFieldAt(const Coordinate &coordinate) const;
 
     void iterateOverAllFields(const IterateOverFieldsFunction& function) const;
 

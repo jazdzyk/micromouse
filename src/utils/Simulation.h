@@ -7,12 +7,16 @@
 
 
 #include <src/maze/Maze.h>
+#include "Robot.h"
+#include <utility>
 
 class Simulation {
 public:
+    using WallSide = MazeWall::WallSide;
     using RobotAlgorithms = std::pair<RobotAlgorithm, std::optional<RobotAlgorithm>>;
+    using RobotDelegates = std::pair<std::optional<RobotDelegate *>, std::optional<RobotDelegate *>>;
 
-    Simulation(Maze *maze, RobotAlgorithms robotAlgorithms);
+    Simulation(Maze *maze, const RobotAlgorithms& robotAlgorithms, const RobotDelegates& robotDelegates);
     ~Simulation();
 
     void start() const;
@@ -20,10 +24,14 @@ public:
     void reset() const;
 
 private:
-    Robot *robot1;
-    std::optional<Robot *> robot2;
+    Robot<15, 100, 12, 20> *robot1;
+    std::optional<Robot<15, 100, 12, 20> *> robot2;
 
     Maze *maze;
+
+    Robot<15, 100, 12, 20> *buildRobot(int id, RobotAlgorithm algorithm, const Coordinate& coordinate,
+                                       std::optional<RobotDelegate *> delegate) const;
+    [[nodiscard]] int getMazeLength() const;
 
     static void delay(double seconds = 1.);
 };
