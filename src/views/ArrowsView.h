@@ -14,7 +14,7 @@
 
 class ArrowsView : public QWidget {
 public:
-    ArrowsView(QWidget *parent = nullptr);
+    explicit ArrowsView(QWidget *parent = nullptr);
     ~ArrowsView() override;
 
     void activateAt(Direction direction) const;
@@ -28,7 +28,7 @@ private:
     ImageLabel *rightArrow;
 
     void setUpUi();
-    QString prepareUrl(Direction direction, bool activated) const;
+    [[nodiscard]] QString prepareUrl(Direction direction, bool activated) const;
 };
 
 
