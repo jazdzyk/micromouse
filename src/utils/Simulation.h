@@ -10,12 +10,14 @@
 #include "Robot.h"
 #include "Timer.h"
 #include <utility>
+#include <src/views/MazeView.h>
 
 class Simulation {
 public:
     using WallSide = MazeWall::WallSide;
     using RobotAlgorithms = std::pair<RobotAlgorithm, std::optional<RobotAlgorithm>>;
     using RobotDelegates = std::pair<std::optional<RobotDelegate *>, std::optional<RobotDelegate *>>;
+    using RobotSurrounding = MazeView::WallSurrounding ;
 
     Simulation(Maze *maze, const RobotAlgorithms& robotAlgorithms, const RobotDelegates& robotDelegates);
     ~Simulation();
@@ -23,6 +25,9 @@ public:
     void start() const;
     void pause() const;
     void reset() const;
+
+    void updateRobotSurrounding(int robotId, const RobotSurrounding& surrounding) const;
+    void updateRobotCurrentPosition(int robotId, const Coordinate& coordinate) const;
 
 private:
     Robot<15, 100, 12, 20> *robot1;

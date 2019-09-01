@@ -9,9 +9,10 @@ using namespace Localizable;
 SimulationController::SimulationController(SimulationSettings &simulationSettings,
                                            std::optional<ReturnToPreviousControllerDelegate *> returnDelegate,
                                            QWidget *parent)
-        : BaseController(simulationSettings, parent), returnDelegate(std::move(returnDelegate)),
-          simulation(new Simulation()) {
+        : BaseController(simulationSettings, parent), returnDelegate(std::move(returnDelegate)) {
     Log::print("SimulationController::SimulationController(&simulationSettings, returnDelegate?, *parent)");
+    this->simulation = new Simulation(*simulationSettings.maze, simulationSettings.robotAlgorithms,
+                                      Simulation::RobotDelegates(std::make_optional(this), std::make_optional(this)));
     setUpUi();
 }
 
@@ -26,7 +27,7 @@ SimulationController::~SimulationController() {
 
 void SimulationController::setUpUi() {
     Log::print("SimulationController::setUpUi()");
-    addToParentLayout(preapreButtonsLayout(), 1);
+    addToParentLayout(prepareButtonsLayout(), 1);
 
     this->mazeView = new MazeView(*this->simulationSettings.maze);
     this->mazeView->setEnabled(false);
@@ -38,8 +39,8 @@ void SimulationController::setUpUi() {
     addToParentLayout(prepareSimulationStateLayout(), 2);
 }
 
-QVBoxLayout *SimulationController::preapreButtonsLayout() {
-    Log::print("SimulationController::preapreButtonsLayout()");
+QVBoxLayout *SimulationController::prepareButtonsLayout() {
+    Log::print("SimulationController::prepareButtonsLayout()");
     this->startSimulationButton = new RoundedPushButton(
             this->locale[PL::START_SIMULATION_BUTTON_SIMULATION_CONTROLLER_TITLE], 15);
     this->startSimulationButton->setAction([this]() {
@@ -114,8 +115,8 @@ void SimulationController::onReturnButtonClicked() {
     }
 }
 
-void SimulationController::robotDidMove(int robotId, Direction direction) {
-    Log::print("SimulationController::robotDidMove(robotId: " + std::to_string(robotId) + ", direction)");
+void SimulationController::activateArrowForRobot(int robotId, Direction direction) const {
+    Log::print("SimulationController::activateArrowForRobot(robotId: " + std::to_string(robotId) + ", direction)");
     switch (robotId) {
         case 0:
             this->leftSimulationStateView->activateArrow(direction);
@@ -126,4 +127,88 @@ void SimulationController::robotDidMove(int robotId, Direction direction) {
         default:
             break;
     }
+}
+
+void SimulationController::deactivateAllArrowsForRobot(int robotId) const {
+    Log::print("SimulationController::deactivateAllArrowsForRobot(robotId: " + std::to_string(robotId) + ")");
+    switch (robotId) {
+        case 0:
+            this->leftSimulationStateView->deactivateAllArrows();
+            break;
+        case 1:
+            this->rightSimulationStateView->deactivateAllArrows();
+            break;
+        default:
+            break;
+    }
+}
+
+void SimulationController::updateDistanceValueForRobot(int robotId, int distance) const {
+    Log::print("SimulationController::updateDistanceValueForRobot(robotId: " + std::to_string(robotId) +
+               ", distance: " + std::to_string(distance) + ")");
+    switch (robotId) {
+        case 0:
+            this->leftSimulationStateView->setDistanceValue(distance);
+            break;
+        case 1:
+            this->rightSimulationStateView->setDistanceValue(distance);
+            break;
+        default:
+            break;
+    }
+}
+
+void SimulationController::updateRobotsDistance(int robotId) {
+    Log::print("SimulationController::updateRobotsDistance(robotId: " + std::to_string(robotId) + ")");
+    switch (robotId) {
+        case 0:
+            this->robotsDistance.first++;
+            break;
+        case 1:
+            this->robotsDistance.second++;
+            break;
+        default:
+            break;
+    }
+}
+
+int SimulationController::getDistanceForRobot(int robotId) const {
+    Log::print("SimulationController::getDistanceForRobot(robotId: " + std::to_string(robotId) + ")");
+    switch (robotId) {
+        case 0:
+            return this->robotsDistance.first;
+        case 1:
+            return this->robotsDistance.second;
+        default:
+            return 0;
+    }
+}
+
+void SimulationController::robotDidMove(int robotId, Direction direction) {
+    Log::print("SimulationController::robotDidMove(robotId: " + std::to_string(robotId) + ", direction)");
+    activateArrowForRobot(robotId, direction);
+}
+
+void SimulationController::robotShouldGoTo(int robotId, RobotMovement movement) {
+    Log::print("SimulationController::robotShouldGoTo(robotId: " + std::to_string(robotId) + ", movement)");
+    this->simulation->updateRobotSurrounding(robotId, this->mazeView->moveRobotTo(robotId, movement));
+    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate());
+
+    updateRobotsDistance(robotId);
+    updateDistanceValueForRobot(robotId, getDistanceForRobot(robotId));
+}
+
+void SimulationController::robotShouldGoToStart(int robotId) {
+    Log::print("SimulationController::robotShouldGoToStart(robotId: " + std::to_string(robotId) + ")");
+    this->simulation->updateRobotSurrounding(robotId, this->mazeView->moveRobotToStart(robotId));
+    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate());
+
+    this->robotsDistance = {0, 0};
+    updateDistanceValueForRobot(robotId, getDistanceForRobot(robotId));
+    deactivateAllArrowsForRobot(robotId);
+}
+
+void SimulationController::robotDidFinish(int robotId) {
+    Log::print("SimulationController::robotDidFinish(robotId: " + std::to_string(robotId) + ")");
+    deactivateAllArrowsForRobot(robotId);
 }

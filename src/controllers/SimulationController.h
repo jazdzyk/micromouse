@@ -16,10 +16,11 @@
 #include <src/views/SimulationStateView.h>
 #include <src/utils/Simulation.h>
 
-class SimulationController : public BaseController, public MazeViewDelegate {
+class SimulationController : public BaseController, public MazeViewDelegate, public RobotDelegate {
     Q_OBJECT
 
 public:
+    using RobotsDistance = std::pair<int, int>;
     explicit SimulationController(SimulationSettings& simulationSettings,
             std::optional<ReturnToPreviousControllerDelegate*> returnDelegate, QWidget *parent = nullptr);
     ~SimulationController() override;
@@ -38,8 +39,10 @@ private:
 
     Simulation *simulation;
 
+    RobotsDistance robotsDistance = {0, 0};
+
     void setUpUi();
-    QVBoxLayout* preapreButtonsLayout();
+    QVBoxLayout* prepareButtonsLayout();
     QVBoxLayout* prepareSimulationStateLayout();
 
     void onStartSimulationButtonClicked();
@@ -47,8 +50,20 @@ private:
     void onResetSimulationButtonClicked();
     void onReturnButtonClicked();
 
+    void activateArrowForRobot(int robotId, Direction direction) const;
+    void deactivateAllArrowsForRobot(int robotId) const;
+    void updateDistanceValueForRobot(int robotId, int distance) const;
+
+    void updateRobotsDistance(int robotId);
+    [[nodiscard]] int getDistanceForRobot(int robotId) const;
+
     // MazeViewDelegate method
     void robotDidMove(int robotId, Direction direction) override;
+
+    // RobotDelegate methods
+    void robotShouldGoTo(int robotId, RobotMovement movement) override;
+    void robotShouldGoToStart(int robotId) override;
+    void robotDidFinish(int robotId) override;
 };
 
 

@@ -71,6 +71,22 @@ void Simulation::reset() const {
     }
 }
 
+void Simulation::updateRobotSurrounding(int robotId, const RobotSurrounding &surrounding) const {
+    Log::print("Simulation::updateRobotSurrounding(robotId: " + std::to_string(robotId) + ", &surrounding)");
+    auto robot = robotId == 0 ? this->robot1 : *this->robot2;
+    robot->updateSurrounding(
+            surrounding.at(WallSide::LEFT),
+            surrounding.at(WallSide::RIGHT),
+            surrounding.at(WallSide::TOP)
+    );
+}
+
+void Simulation::updateRobotCurrentPosition(int robotId, const Coordinate &coordinate) const {
+    Log::print("Simulation::updateRobotCurrentPosition(robotId: " + std::to_string(robotId) + "&coordinate)");
+    auto robot = robotId == 0 ? this->robot1 : *this->robot2;
+    robot->updateCurrentPosition(coordinate);
+}
+
 Robot<15, 100, 12, 20> *Simulation::buildRobot(int id, RobotAlgorithm algorithm, const Coordinate &coordinate,
                                                std::optional<RobotDelegate *> delegate) const {
     Log::print("Simulation::buildRobot(id, algorithm, &coordinate, delegate?)");
