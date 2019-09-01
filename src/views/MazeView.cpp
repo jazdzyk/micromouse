@@ -224,7 +224,7 @@ void MazeView::createBoard(std::optional<const MazeFields> mazeFields) {
             if (mazeFields) {
                 fieldView = new MazeFieldView((*mazeFields).at(column)[row], this->mazeSize, this);
             } else {
-                fieldView = new MazeFieldView(Coordinate(row, column), this->mazeSize, this);
+                fieldView = new MazeFieldView(Coordinate(column, row), this->mazeSize, this);
             }
             addWidget(fieldView, column, row, 1, 1);
             _temp.push_back(fieldView);
@@ -279,25 +279,25 @@ void MazeView::mazeFieldWallDidSet(const MazeFieldViewDelegate::MazeFieldViewInf
         switch (_info.wallSide) {
             case WallSide::LEFT:
                 if (_info.coordinate.column != 0) {
-                    this->mazeBoard[_info.coordinate.row][_info.coordinate.column - 1]->setBorder(
+                    this->mazeBoard[_info.coordinate.column - 1][_info.coordinate.row]->setBorder(
                             WallSide::RIGHT, _info.shouldBeSet);
                 }
                 break;
             case WallSide::RIGHT:
                 if (_info.coordinate.column != mazeLength) {
-                    this->mazeBoard[_info.coordinate.row][_info.coordinate.column + 1]->setBorder(
+                    this->mazeBoard[_info.coordinate.column + 1][_info.coordinate.row]->setBorder(
                             WallSide::LEFT, _info.shouldBeSet);
                 }
                 break;
             case WallSide::TOP:
                 if (_info.coordinate.row != 0) {
-                    this->mazeBoard[_info.coordinate.row - 1][_info.coordinate.column]->setBorder(
+                    this->mazeBoard[_info.coordinate.column][_info.coordinate.row - 1]->setBorder(
                             WallSide::BOTTOM, _info.shouldBeSet);
                 }
                 break;
             case WallSide::BOTTOM:
                 if (_info.coordinate.row != mazeLength) {
-                    this->mazeBoard[_info.coordinate.row + 1][_info.coordinate.column]->setBorder(
+                    this->mazeBoard[_info.coordinate.column][_info.coordinate.row + 1]->setBorder(
                             WallSide::TOP, _info.shouldBeSet);
                 }
                 break;

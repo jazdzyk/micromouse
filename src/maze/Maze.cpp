@@ -46,7 +46,7 @@ void Maze::iterateOverAllFields(const Maze::IterateOverFieldsFunction &function)
     auto fieldsSize = this->fields.size();
     for (auto row = 0; row < fieldsSize; ++row) {
         for (auto column = 0; column < fieldsSize; ++column) {
-            function(this->fields[column][row]);
+            function(this->fields[row][column]);
         }
     }
 }
@@ -77,7 +77,7 @@ void Maze::deserializeJson(const QJsonObject &json) {
     this->fields = std::vector<std::vector<MazeField *>>(maxInRowCount, std::vector<MazeField *>(maxInRowCount));
     for (auto field : jsonFields) {
         auto currentField = new MazeField(field.toObject());
-        auto currentCoordinate = currentField->getCoordinate();
+        auto currentCoordinate = currentField->getCoordinate().transpose();
         this->fields[currentCoordinate.column][currentCoordinate.row] = currentField;
     }
 }

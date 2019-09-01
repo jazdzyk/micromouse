@@ -100,10 +100,10 @@ RandomMazeGenerator::Neighbours RandomMazeGenerator::getAvailableNeighbours() co
     Log::print("RandomMazeGenerator::getAvailableNeighbours()");
     auto coordinate = this->currentField->getCoordinate();
     std::map<Direction, int> neighboursIndices = {
-            {Direction::TOP,    calculateFieldPosition(Coordinate(coordinate.row - 1, coordinate.column))},
-            {Direction::RIGHT,  calculateFieldPosition(Coordinate(coordinate.row, coordinate.column + 1))},
-            {Direction::BOTTOM, calculateFieldPosition(Coordinate(coordinate.row + 1, coordinate.column))},
-            {Direction::LEFT,   calculateFieldPosition(Coordinate(coordinate.row, coordinate.column - 1))},
+            {Direction::LEFT,    calculateFieldPosition(Coordinate(coordinate.row - 1, coordinate.column))},
+            {Direction::BOTTOM,  calculateFieldPosition(Coordinate(coordinate.row, coordinate.column + 1))},
+            {Direction::RIGHT, calculateFieldPosition(Coordinate(coordinate.row + 1, coordinate.column))},
+            {Direction::TOP,   calculateFieldPosition(Coordinate(coordinate.row, coordinate.column - 1))},
     };
 
     Neighbours neighbours;
@@ -120,13 +120,13 @@ MazeField *RandomMazeGenerator::findNextField() const {
     Log::print("RandomMazeGenerator::findNextField()");
     auto availableNeighbours = getAvailableNeighbours();
 
+    if (availableNeighbours.empty()) {
+        return nullptr;
+    }
+
     std::vector<Direction> availableDirections;
     for (auto element : availableNeighbours) {
         availableDirections.push_back(element.first);
-    }
-
-    if (availableNeighbours.empty()) {
-        return nullptr;
     }
 
     return availableNeighbours.at(availableDirections[rand() % availableNeighbours.size()]);
