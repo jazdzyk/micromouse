@@ -25,6 +25,10 @@ struct Coordinate : Serializable {
         return result;
     }
 
+    inline bool operator==(const Coordinate& another) {
+        return (this->vertical == another.vertical) && (this->horizontal == another.horizontal);
+    }
+
     // Serializable methods
     [[nodiscard]] QJsonObject serializeToJson() const override {
         QJsonObject json;

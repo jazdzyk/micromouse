@@ -8,6 +8,7 @@
 
 #include <src/maze/Maze.h>
 #include "Robot.h"
+#include "Timer.h"
 #include <utility>
 
 class Simulation {
@@ -29,9 +30,13 @@ private:
 
     Maze *maze;
 
-    Robot<15, 100, 12, 20> *buildRobot(int id, RobotAlgorithm algorithm, const Coordinate& coordinate,
-                                       std::optional<RobotDelegate *> delegate) const;
+    Timer *timer1;
+    Timer *timer2;
+
+    [[nodiscard]] Robot<15, 100, 12, 20> *buildRobot(int id, RobotAlgorithm algorithm, const Coordinate &coordinate,
+                                                     std::optional<RobotDelegate *> delegate) const;
     [[nodiscard]] int getMazeLength() const;
+    [[nodiscard]] Coordinate getMazeEndCoordinate() const;
 
     static void delay(double seconds = 1.);
 };

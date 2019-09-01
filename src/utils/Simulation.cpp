@@ -16,6 +16,9 @@ Simulation::Simulation(Maze *maze, const Simulation::RobotAlgorithms &robotAlgor
         this->robot2.emplace(buildRobot(1, algorithm,
                                         Coordinate(getMazeLength(), 0), robotDelegates.second));
     }
+
+    this->timer1 = new Timer;
+    this->timer2 = new Timer;
 }
 
 Simulation::~Simulation() {
@@ -24,21 +27,48 @@ Simulation::~Simulation() {
     if (robot2) {
         utils::destruct(*robot2);
     }
+    utils::destruct(timer1);
+    utils::destruct(timer2);
 }
 
 void Simulation::start() const {
     Log::print("Simulation::start()");
+    this->timer1->setInterval([=]() {
+        this->robot1->move();
 
+        if (this->robot1->getCurrentPosition() == getMazeEndCoordinate()) {
+            this->timer1->stop();
+        }
+    }, 50);
+
+    if (this->robot2) {
+        this->timer2->setInterval([=]() {
+            auto robot2 = *this->robot2;
+            robot2->move();
+
+            if (robot2->getCurrentPosition() == getMazeEndCoordinate()) {
+                this->timer2->stop();
+            }
+        }, 50);
+    }
 }
 
 void Simulation::pause() const {
     Log::print("Simulation::pause()");
-
+    this->timer1->pause();
+    this->timer2->pause();
 }
 
 void Simulation::reset() const {
     Log::print("Simulation::reset()");
+    this->timer1->stop();
+    this->timer2->stop();
 
+    this->robot1->goToStart();
+    if (this->robot2) {
+        auto robot2 = *this->robot2;
+        robot2->goToStart();
+    }
 }
 
 Robot<15, 100, 12, 20> *Simulation::buildRobot(int id, RobotAlgorithm algorithm, const Coordinate &coordinate,
@@ -57,8 +87,14 @@ Robot<15, 100, 12, 20> *Simulation::buildRobot(int id, RobotAlgorithm algorithm,
 }
 
 int Simulation::getMazeLength() const {
-    Log::print("Simulation::getMazeLength(*maze)");
+    Log::print("Simulation::getMazeLength()");
     return static_cast<int>(sqrt(static_cast<int>(this->maze->getSize())) - 1);
+}
+
+Coordinate Simulation::getMazeEndCoordinate() const {
+    Log::print("Simulation::getMazeEndCoordinate()");
+    auto mazeLength = getMazeLength();
+    return Coordinate(static_cast<int>(mazeLength / 2), static_cast<int>(mazeLength / 2));
 }
 
 void Simulation::delay(double seconds) {
