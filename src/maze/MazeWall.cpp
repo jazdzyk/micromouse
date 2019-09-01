@@ -69,7 +69,11 @@ const MazeWall::NeighbourField &MazeWall::getNeighbour() const {
 void MazeWall::setNeighbour(const MazeWall::NeighbourField &neighbour) {
     Log::print("MazeWall::setNeighbour(&neighbour)");
     if (!this->blocked) {
-        this->neighbour = neighbour;
+        if (neighbour != nullptr) {
+            this->neighbour = neighbour;
+        } else {
+            this->neighbour = {};
+        }
     }
 }
 

@@ -21,16 +21,24 @@ public:
         Log::print("MazeSolver::MazeSolver(algorithm)");
         switch (algorithm) {
             case RobotAlgorithm::LEFT_WALL_FOLLOWER:
-                this->solverAlgorithm = leftWallFollower;
+                this->solverAlgorithm = [this](auto measurement) {
+                    return this->leftWallFollower(measurement);
+                };
                 break;
             case RobotAlgorithm::RIGHT_WALL_FOLLOWER:
-                this->solverAlgorithm = rightWallFollower;
+                this->solverAlgorithm = [this](auto measurement) {
+                    return this->rightWallFollower(measurement);
+                };
                 break;
             case RobotAlgorithm::BRUTE_FORCE:
-                this->solverAlgorithm = bruteForce;
+                this->solverAlgorithm = [this](auto measurement) {
+                    return this->bruteForce(measurement);
+                };
                 break;
             case RobotAlgorithm::WAVE_PROPAGATION:
-                this->solverAlgorithm = wavePropagation;
+                this->solverAlgorithm = [this](auto measurement) {
+                    return this->wavePropagation(measurement);
+                };
                 break;
         }
     }
@@ -41,9 +49,10 @@ public:
     }
 
 private:
-    std::function<RobotMovement(DistanceMeasurement &)> solverAlgorithm;
+    using AlgorithmFunction = std::function<RobotMovement(const DistanceMeasurement &)>;
+    AlgorithmFunction solverAlgorithm;
 
-    static RobotMovement leftWallFollower(DistanceMeasurement &measurement) {
+    RobotMovement leftWallFollower(DistanceMeasurement &measurement) {
         Log::print("MazeSolver::leftWallFollower(&measurement)");
         if (measurement[WallSide::LEFT] > distanceThreshold) {
             return RobotMovement::LEFT;
@@ -56,7 +65,7 @@ private:
         }
     }
 
-    static RobotMovement rightWallFollower(DistanceMeasurement &measurement) {
+    RobotMovement rightWallFollower(DistanceMeasurement &measurement) {
         Log::print("MazeSolver::rightWallFollower(&measurement)");
         if (measurement[WallSide::RIGHT] > distanceThreshold) {
             return RobotMovement::RIGHT;
@@ -69,7 +78,7 @@ private:
         }
     }
 
-    static RobotMovement bruteForce(DistanceMeasurement &measurement) {
+    RobotMovement bruteForce(DistanceMeasurement &measurement) {
         Log::print("MazeSolver::bruteForce(&measurement)");
         // TODO: probably something does not work as it should
         if (measurement[WallSide::TOP] > distanceThreshold && measurement[WallSide::LEFT] > distanceThreshold &&
@@ -89,7 +98,7 @@ private:
         }
     }
 
-    static RobotMovement wavePropagation(DistanceMeasurement &measurement) {
+    RobotMovement wavePropagation(DistanceMeasurement &measurement) {
         Log::print("MazeSolver::wavePropagation(&measurement)");
         return RobotMovement::LEFT;
     }

@@ -19,7 +19,7 @@
 template<int wheelRadius, int motorMaxRpm, int mazeFieldSize, int toWallFactor>
 class Robot {
 public:
-    using WallSide = MazeWall::WallSide;
+    using WallSide = Direction;
     using Surrounding = std::map<WallSide, MazeWall *>;
     using SensorsValues = std::map<WallSide, double>;
 
@@ -42,6 +42,7 @@ public:
         utils::destruct(this->leftMotor);
         utils::destruct(this->rightMotor);
         utils::destruct(this->leftSensor);
+        utils::destruct(this->rightSensor);
         utils::destruct(this->frontSensor);
     }
 
@@ -66,7 +67,7 @@ public:
         }
     }
 
-    void updateSurrounding(MazeWall *left, MazeWall *right, MazeWall *front) const {
+    void updateSurrounding(MazeWall *left, MazeWall *right, MazeWall *front) {
         Log::print("Robot::updateSurrounding(surrounding)");
         this->currentSurrounding = {
                 {WallSide::LEFT, left},
@@ -80,7 +81,7 @@ public:
         return this->currentPosition;
     }
 
-    void updateCurrentPosition(const Coordinate &newPosition) const {
+    void updateCurrentPosition(const Coordinate &newPosition) {
         Log::print("Robot::updateCurrentPosition(&newPosition)");
         this->currentPosition = newPosition;
     }
@@ -125,9 +126,9 @@ private:
     [[nodiscard]] SensorsValues readSensorsValues() const {
         Log::print("Robot::readSensorsValues()");
         return {
-                {WallSide::LEFT, this->leftSensor->measureDistance(this->currentSurrounding[WallSide::LEFT])},
-                {WallSide::RIGHT, this->leftSensor->measureDistance(this->currentSurrounding[WallSide::RIGHT])},
-                {WallSide::TOP, this->leftSensor->measureDistance(this->currentSurrounding[WallSide::TOP])},
+                {WallSide::LEFT, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::LEFT))},
+                {WallSide::RIGHT, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::RIGHT))},
+                {WallSide::TOP, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::TOP))},
         };
     }
 };

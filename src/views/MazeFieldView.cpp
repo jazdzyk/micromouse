@@ -70,7 +70,7 @@ void MazeFieldView::showRobot(bool robot, int rotation) {
     };
 
     if (robot) {
-        setPixmap(rotatedPixmap(":/images/robot-icon.png", this->currentRobotRotation));
+        setPixmap(rotatedPixmap(":/robot-icon", this->currentRobotRotation));
         setAlignment(Qt::AlignCenter);
     } else {
         clear();

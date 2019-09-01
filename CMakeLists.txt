@@ -10,6 +10,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_PREFIX_PATH "/lib/x86_64-linux-gnu/cmake")
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
@@ -17,3 +20,4 @@ add_executable(micromouse main.cpp src/utils/Timer.cpp src/utils/Timer.h src/con
 
 target_link_libraries(micromouse Qt5::Core)
 target_link_libraries(micromouse Qt5::Widgets)
+target_link_libraries(micromouse Threads::Threads)

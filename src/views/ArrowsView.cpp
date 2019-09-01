@@ -32,23 +32,23 @@ void ArrowsView::deactivateAll() const {
 
 void ArrowsView::setUpUi() {
     Log::print("ArrowsView::setUpUi()");
-    this->leftArrow = new ImageLabel(":/images/left-arrow-inactive.png", ARROW_SIZE);
+    this->leftArrow = new ImageLabel(":/left-arrow-inactive", ARROW_SIZE);
     this->leftArrow->setParent(this);
     this->leftArrow->move(QPoint(0, 35));
 
-    this->topArrow = new ImageLabel(":/images/up-arrow-inactive.png", ARROW_SIZE);
+    this->topArrow = new ImageLabel(":/up-arrow-inactive", ARROW_SIZE);
     this->topArrow->setParent(this);
     this->topArrow->move(QPoint(35, 0));
 
-    this->rightArrow = new ImageLabel(":/images/right-arrow-inactive.png", ARROW_SIZE);
+    this->rightArrow = new ImageLabel(":/right-arrow-inactive", ARROW_SIZE);
     this->rightArrow->setParent(this);
     this->rightArrow->move(QPoint(71, 35));
 }
 
 QString ArrowsView::prepareUrl(Direction direction, bool activated) const {
     Log::print("ArrowsView::prepareUrl(direction, activated)");
-    QString urlPrefix = ":/images/";
-    QString urlSuffix = activated ? ".png" : "-inactive.png";
+    QString urlPrefix = ":/";
+    QString urlSuffix = activated ? "" : "-inactive";
 
     switch (direction) {
         case Direction::LEFT:
