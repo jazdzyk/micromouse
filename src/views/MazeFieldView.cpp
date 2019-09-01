@@ -14,7 +14,7 @@ MazeFieldView::MazeFieldView(const Coordinate &coordinate, MazeSize mazeSize,
 }
 
 MazeFieldView::MazeFieldView(MazeField *mazeField, MazeSize mazeSize, std::optional<MazeFieldViewDelegate *> delegate)
-        : QLabel(), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)), fieldType(::PLAIN) {
+        : QLabel("(" + QString::number(mazeField->getCoordinate().row) + ", " + QString::number(mazeField->getCoordinate().column) + ")"), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)), fieldType(::PLAIN), currentRobotRotation(0) {
     Log::print("MazeFieldView::MazeFieldView(*mazeField, mazeSize, delegate?)");
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setEnabled(true);
@@ -99,16 +99,16 @@ void MazeFieldView::updateBorders() {
 
     auto styleSheet = QString("border-left:  %2px solid rgb(%1);")
                               .arg(colorHex(this->mazeField->hasWallAt(WallSide::LEFT), WallSide::LEFT))
-                              .arg(borderWidth(this->getCoordinate().horizontal, true)) +
+                              .arg(borderWidth(this->getCoordinate().column, true)) +
                       QString("border-right: %2px solid rgb(%1);")
                               .arg(colorHex(this->mazeField->hasWallAt(WallSide::RIGHT), WallSide::RIGHT))
-                              .arg(borderWidth(this->getCoordinate().horizontal, false)) +
+                              .arg(borderWidth(this->getCoordinate().column, false)) +
                       QString("border-top: %2px solid rgb(%1);")
                               .arg(colorHex(this->mazeField->hasWallAt(WallSide::TOP), WallSide::TOP))
-                              .arg(borderWidth(this->getCoordinate().vertical, true)) +
+                              .arg(borderWidth(this->getCoordinate().row, true)) +
                       QString("border-bottom: %2px solid rgb(%1);")
                               .arg(colorHex(this->mazeField->hasWallAt(WallSide::BOTTOM), WallSide::BOTTOM))
-                              .arg(borderWidth(this->getCoordinate().vertical, false));
+                              .arg(borderWidth(this->getCoordinate().row, false));
 
     setStyleSheet(styleSheet);
     paintFieldIfNeeded();
@@ -118,13 +118,13 @@ bool MazeFieldView::isEdgeSide(MazeFieldView::WallSide side) const {
     Log::print("MazeFieldView::isEdgeSide(side)");
     switch (side) {
         case Direction::LEFT:
-            return this->getCoordinate().horizontal == 0;
+            return this->getCoordinate().column == 0;
         case Direction::RIGHT:
-            return this->getCoordinate().horizontal == (calculateMazeSideLength() - 1);
+            return this->getCoordinate().column == (calculateMazeSideLength() - 1);
         case Direction::TOP:
-            return this->getCoordinate().vertical == 0;
+            return this->getCoordinate().row == 0;
         case Direction::BOTTOM:
-            return this->getCoordinate().vertical == (calculateMazeSideLength() - 1);
+            return this->getCoordinate().row == (calculateMazeSideLength() - 1);
     }
 }
 

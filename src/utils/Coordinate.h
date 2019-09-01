@@ -10,38 +10,42 @@
 #include "src/protocols/Serializable.h"
 
 struct Coordinate : Serializable {
-    int vertical;
-    int horizontal;
+    int row;
+    int column;
 
-    Coordinate() : vertical(0), horizontal(0) {}
-    Coordinate(int vertical, int horizontal) : vertical(vertical), horizontal(horizontal) {}
+    Coordinate() : row(0), column(0) {}
+    Coordinate(int row, int column) : row(row), column(column) {}
+
+    [[nodiscard]] Coordinate transpose() const {
+        return Coordinate(this->column, this->row);
+    }
 
     Coordinate operator-(const Coordinate& another) {
         Coordinate result;
 
-        result.vertical = this->vertical - another.vertical;
-        result.horizontal = this->horizontal - another.horizontal;
+        result.row = this->row - another.row;
+        result.column = this->column - another.column;
 
         return result;
     }
 
     inline bool operator==(const Coordinate& another) {
-        return (this->vertical == another.vertical) && (this->horizontal == another.horizontal);
+        return (this->row == another.row) && (this->column == another.column);
     }
 
     // Serializable methods
     [[nodiscard]] QJsonObject serializeToJson() const override {
         QJsonObject json;
 
-        json.insert(JsonKeys::VERTICAL, this->vertical);
-        json.insert(JsonKeys::HORIZONTAL, this->horizontal);
+        json.insert(JsonKeys::VERTICAL, this->row);
+        json.insert(JsonKeys::HORIZONTAL, this->column);
 
         return json;
     }
 
     void deserializeJson(const QJsonObject &json) override {
-        this->vertical = json[JsonKeys::VERTICAL].toInt();
-        this->horizontal = json[JsonKeys::HORIZONTAL].toInt();
+        this->row = json[JsonKeys::VERTICAL].toInt();
+        this->column = json[JsonKeys::HORIZONTAL].toInt();
     }
 };
 

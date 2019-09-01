@@ -36,17 +36,20 @@ RandomMazeGenerator::MazeBoard RandomMazeGenerator::generate() {
 void RandomMazeGenerator::createFields() {
     Log::print("RandomMazeGenerator::createFields()");
     auto mazeSideLength = calculateMazeSideLength();
-    for (auto x = 0; x < mazeSideLength; ++x) {
-        for (auto y = 0; y < mazeSideLength; ++y) {
-            auto coordinate = Coordinate(y, x);
+    for (auto row = 0; row < mazeSideLength; ++row) {
+        for (auto column = 0; column < mazeSideLength; ++column) {
+            auto coordinate = Coordinate(row, column);
             this->fields.push_back(new MazeField(coordinate, prepareMazeFieldWalls(coordinate)));
+            std::cout << "//|(" + std::to_string(column) + ", " + std::to_string(row) + ") = (" +
+                         std::to_string(this->fields[calculateFieldPosition(coordinate)]->getCoordinate().column) + ", " +
+                         std::to_string(this->fields[calculateFieldPosition(coordinate)]->getCoordinate().row) + ")|\n";
         }
     }
 
     using WallSide = MazeField::WallSide;
-    for (auto x = 0; x < mazeSideLength; ++x) {
-        for (auto y = 0; y < mazeSideLength; ++y) {
-            auto coordinate = Coordinate(y, x);
+    for (auto row = 0; row < mazeSideLength; ++row) {
+        for (auto column = 0; column < mazeSideLength; ++column) {
+            auto coordinate = Coordinate(row, column);
             auto neighbours = getNeighboursFor(coordinate);
             auto fieldPosition = calculateFieldPosition(coordinate);
 
@@ -58,6 +61,9 @@ void RandomMazeGenerator::createFields() {
                                                                           neighbours.at(Direction::TOP));
             this->fields[fieldPosition]->setNeighbourAssociatedWithWallAt(WallSide::BOTTOM,
                                                                           neighbours.at(Direction::BOTTOM));
+            std::cout << "*|(" + std::to_string(column) + ", " + std::to_string(row) + ") = (" +
+                         std::to_string(this->fields[calculateFieldPosition(coordinate)]->getCoordinate().column) + ", " +
+                         std::to_string(this->fields[calculateFieldPosition(coordinate)]->getCoordinate().row) + ")|\n";
         }
     }
 }
@@ -65,21 +71,21 @@ void RandomMazeGenerator::createFields() {
 int RandomMazeGenerator::calculateFieldPosition(const Coordinate &coordinate) const {
     Log::print("RandomMazeGenerator::calculateFieldPosition(&coordinate)");
     auto mazeSizeLength = calculateMazeSideLength() - 1;
-    if (coordinate.horizontal < 0 || coordinate.horizontal > mazeSizeLength ||
-        coordinate.vertical < 0 || coordinate.vertical > mazeSizeLength) {
+    if (coordinate.column < 0 || coordinate.column > mazeSizeLength ||
+        coordinate.row < 0 || coordinate.row > mazeSizeLength) {
         return -1;
     }
 
-    return coordinate.vertical + coordinate.horizontal * (mazeSizeLength + 1);
+    return coordinate.column + coordinate.row * (mazeSizeLength + 1);
 }
 
 RandomMazeGenerator::Neighbours RandomMazeGenerator::getNeighboursFor(Coordinate &coordinate) const {
     Log::print("RandomMazeGenerator::getNeighboursFor(&coordinate)");
     std::map<Direction, int> neighboursIndices = {
-            {Direction::TOP,    calculateFieldPosition(Coordinate(coordinate.vertical - 1, coordinate.horizontal))},
-            {Direction::RIGHT,  calculateFieldPosition(Coordinate(coordinate.vertical, coordinate.horizontal + 1))},
-            {Direction::BOTTOM, calculateFieldPosition(Coordinate(coordinate.vertical + 1, coordinate.horizontal))},
-            {Direction::LEFT,   calculateFieldPosition(Coordinate(coordinate.vertical, coordinate.horizontal - 1))},
+            {Direction::TOP,    calculateFieldPosition(Coordinate(coordinate.row - 1, coordinate.column))},
+            {Direction::RIGHT,  calculateFieldPosition(Coordinate(coordinate.row, coordinate.column + 1))},
+            {Direction::BOTTOM, calculateFieldPosition(Coordinate(coordinate.row + 1, coordinate.column))},
+            {Direction::LEFT,   calculateFieldPosition(Coordinate(coordinate.row, coordinate.column - 1))},
     };
 
     Neighbours neighbours;
@@ -94,10 +100,10 @@ RandomMazeGenerator::Neighbours RandomMazeGenerator::getAvailableNeighbours() co
     Log::print("RandomMazeGenerator::getAvailableNeighbours()");
     auto coordinate = this->currentField->getCoordinate();
     std::map<Direction, int> neighboursIndices = {
-            {Direction::TOP,    calculateFieldPosition(Coordinate(coordinate.vertical - 1, coordinate.horizontal))},
-            {Direction::RIGHT,  calculateFieldPosition(Coordinate(coordinate.vertical, coordinate.horizontal + 1))},
-            {Direction::BOTTOM, calculateFieldPosition(Coordinate(coordinate.vertical + 1, coordinate.horizontal))},
-            {Direction::LEFT,   calculateFieldPosition(Coordinate(coordinate.vertical, coordinate.horizontal - 1))},
+            {Direction::TOP,    calculateFieldPosition(Coordinate(coordinate.row - 1, coordinate.column))},
+            {Direction::RIGHT,  calculateFieldPosition(Coordinate(coordinate.row, coordinate.column + 1))},
+            {Direction::BOTTOM, calculateFieldPosition(Coordinate(coordinate.row + 1, coordinate.column))},
+            {Direction::LEFT,   calculateFieldPosition(Coordinate(coordinate.row, coordinate.column - 1))},
     };
 
     Neighbours neighbours;
@@ -138,7 +144,7 @@ RandomMazeGenerator::MazeBoard RandomMazeGenerator::createOutputFieldsForm() con
     return outputFields;
 }
 
-MazeField::Walls RandomMazeGenerator::prepareMazeFieldWalls(Coordinate &coordinate) const {
+MazeField::Walls RandomMazeGenerator::prepareMazeFieldWalls(Coordinate& coordinate) const {
     Log::print("RandomMazeGenerator::prepareMazeFieldWalls(&coordinate)");
     using WallSide = MazeField::WallSide;
 

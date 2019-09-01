@@ -59,13 +59,13 @@ void MazeField::removeWall(const Coordinate &nextCoordinate) {
     auto diffCoord = this->coordinate - nextCoordinate;
 
     WallSide wallSide;
-    if (diffCoord.horizontal == 1) {
+    if (diffCoord.column == 1) {
         wallSide = WallSide::TOP;
-    } else if (diffCoord.horizontal == -1) {
+    } else if (diffCoord.column == -1) {
         wallSide = WallSide::BOTTOM;
-    } else if (diffCoord.vertical == 1) {
+    } else if (diffCoord.row == 1) {
         wallSide = WallSide::LEFT;
-    } else if (diffCoord.vertical == -1) {
+    } else if (diffCoord.row == -1) {
         wallSide = WallSide::RIGHT;
     } else {
         return;

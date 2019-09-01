@@ -39,13 +39,14 @@ Maze::MazeFields Maze::getFields() const {
 
 MazeField *Maze::getFieldAt(const Coordinate &coordinate) const {
     Log::print("Maze::getFieldAt(Coordinate &coordinate)");
-    return this->fields[coordinate.vertical][coordinate.horizontal];
+    return this->fields[coordinate.row][coordinate.column];
 }
 
-void Maze::iterateOverAllFields(const Maze::IterateOverFieldsFunction& function) const  {
-    for (const auto& row : this->fields) {
-        for (auto field : row) {
-            function(field);
+void Maze::iterateOverAllFields(const Maze::IterateOverFieldsFunction &function) const {
+    auto fieldsSize = this->fields.size();
+    for (auto row = 0; row < fieldsSize; ++row) {
+        for (auto column = 0; column < fieldsSize; ++column) {
+            function(this->fields[column][row]);
         }
     }
 }
@@ -58,7 +59,7 @@ QJsonObject Maze::serializeToJson() const {
     json.insert(JsonKeys::SIMULATION_MODE, static_cast<int>(this->simulationMode));
 
     auto *jsonFields = new QJsonArray();
-    iterateOverAllFields([jsonFields](MazeField* field) {
+    iterateOverAllFields([jsonFields](MazeField *field) {
         jsonFields->append(field->serializeToJson());
     });
     json.insert(JsonKeys::FIELDS, *jsonFields);
@@ -77,7 +78,7 @@ void Maze::deserializeJson(const QJsonObject &json) {
     for (auto field : jsonFields) {
         auto currentField = new MazeField(field.toObject());
         auto currentCoordinate = currentField->getCoordinate();
-        this->fields[currentCoordinate.horizontal][currentCoordinate.vertical] = currentField;
+        this->fields[currentCoordinate.column][currentCoordinate.row] = currentField;
     }
 }
 

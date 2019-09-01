@@ -142,6 +142,30 @@ void StartController::onCreateOwnMazeButtonClicked(int id) {
 
 void StartController::mazeControllerDidAcceptMaze(BaseController *controller, SimulationSettings &simulationSettings) {
     Log::print("StartController::mazeControllerDidAcceptMaze(*controller, &simulationSettings)");
+    this->simulationSettings = simulationSettings;
+    this->simulationModeBox->setRadioButton(static_cast<int>(simulationSettings.simulationMode) - 1);
+
+    int mazeModeButtonId = 0;
+    switch (simulationSettings.mazeSize) {
+        case _256_FIELDS:
+            mazeModeButtonId = 0;
+            break;
+        case _576_FIELDS:
+            mazeModeButtonId = 1;
+            break;
+        case _1024_FIELDS:
+            mazeModeButtonId = 2;
+            break;
+    }
+    this->mazeSizeBox->setRadioButton(mazeModeButtonId);
+
+    this->algorithmModeBox->setDropDownOption(0, static_cast<int>(simulationSettings.robotAlgorithms.first));
+    if (simulationSettings.simulationMode == SimulationMode::TWO_ROBOTS) {
+        this->algorithmModeBox->setDropDownOption(1, static_cast<int>(*simulationSettings.robotAlgorithms.second));
+    }
+
+    controller->hide();
+    showFullScreen();
 }
 
 void StartController::controllerWillReturn(BaseController *controller) {

@@ -91,11 +91,11 @@ void MazeWall::removeWall() {
 MazeWall *MazeWall::createDefault(MazeWall::WallSide side, const Coordinate &coordinate, MazeSize mazeSize,
                                   bool shouldBeActive) {
     Log::print("MazeWall::createDefault(side, &coordinate, mazeSize)");
-    auto shouldBeBlocked = (coordinate.horizontal == 0 && side == WallSide::LEFT) ||
-            (coordinate.horizontal == (static_cast<int>(mazeSize) - 1) && side == WallSide::RIGHT) ||
-            (coordinate.vertical == 0 && side == WallSide::TOP) ||
-            (coordinate.vertical == (static_cast<int>(mazeSize) - 1) && side == WallSide::BOTTOM);
-    // TODO: neighbour is not passed here
+    auto shouldBeBlocked = (coordinate.column == 0 && side == WallSide::LEFT) ||
+                           (coordinate.column == (static_cast<int>(mazeSize) - 1) && side == WallSide::RIGHT) ||
+                           (coordinate.row == 0 && side == WallSide::TOP) ||
+                           (coordinate.row == (static_cast<int>(mazeSize) - 1) && side == WallSide::BOTTOM);
+
     return new MazeWall(!shouldBeActive ? shouldBeBlocked : true, shouldBeBlocked, side);
 }
 
