@@ -86,10 +86,20 @@ public:
         this->currentPosition = newPosition;
     }
 
+    [[nodiscard]] int getId() const {
+        Log::print("Robot::getId()");
+        return this->id;
+    }
+
     [[nodiscard]] double getCurrentSpeed() const {
         Log::print("Robot::getCurrentSpeed()");
         // TODO: implement in real-world application
         return wheelRadius * 0.;
+    }
+
+    [[nodiscard]] std::optional<RobotDelegate *> getDelegate() const {
+        Log::print("Robot::getDelegate()");
+        return this->delegate;
     }
 
 private:
@@ -127,8 +137,8 @@ private:
         Log::print("Robot::readSensorsValues()");
         return {
                 {WallSide::LEFT, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::LEFT))},
-                {WallSide::RIGHT, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::RIGHT))},
-                {WallSide::TOP, this->leftSensor->measureDistance(this->currentSurrounding.at(WallSide::TOP))},
+                {WallSide::RIGHT, this->rightSensor->measureDistance(this->currentSurrounding.at(WallSide::RIGHT))},
+                {WallSide::TOP, this->frontSensor->measureDistance(this->currentSurrounding.at(WallSide::TOP))},
         };
     }
 };

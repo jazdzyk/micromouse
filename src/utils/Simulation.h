@@ -8,7 +8,8 @@
 
 #include <src/maze/Maze.h>
 #include "Robot.h"
-#include "Timer.h"
+#include <QTimer>
+#include <QObject>
 #include <utility>
 #include <src/views/MazeView.h>
 
@@ -24,7 +25,7 @@ public:
 
     void start() const;
     void pause() const;
-    void reset() const;
+    void reset();
 
     void updateRobotSurrounding(int robotId, const RobotSurrounding& surrounding) const;
     void updateRobotCurrentPosition(int robotId, const Coordinate& coordinate) const;
@@ -34,12 +35,17 @@ private:
     std::optional<Robot<15, 100, 12, 20> *> robot2;
 
     Maze *maze;
+    RobotAlgorithms algorithms;
 
-    Timer *timer1;
-    Timer *timer2;
+    QTimer *timer1;
+    QTimer *timer2;
+
+    void simulate(Robot<15, 100, 12, 20>* robot, QTimer *timer) const;
 
     [[nodiscard]] Robot<15, 100, 12, 20> *buildRobot(int id, RobotAlgorithm algorithm, const Coordinate &coordinate,
                                                      std::optional<RobotDelegate *> delegate) const;
+    Robot<15, 100, 12, 20>* resetRobot(Robot<15, 100, 12, 20> *robot);
+
     [[nodiscard]] int getMazeLength() const;
     [[nodiscard]] Coordinate getMazeEndCoordinate() const;
 

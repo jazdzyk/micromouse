@@ -50,13 +50,13 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
         auto getMovement = [](RobotMovement desiredMovement, const std::vector<WallSide> &choices) {
             switch (desiredMovement) {
                 case RobotMovement::FORWARD:
-                    return choices[0];
-                case RobotMovement::BACK:
-                    return choices[1];
-                case RobotMovement::LEFT:
                     return choices[2];
-                case RobotMovement::RIGHT:
+                case RobotMovement::BACK:
                     return choices[3];
+                case RobotMovement::LEFT:
+                    return choices[0];
+                case RobotMovement::RIGHT:
+                    return choices[1];
             }
         };
 
@@ -124,7 +124,7 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
     };
 
     this->currentRobotField->showRobot(true, rotationAngle);
-    updateUi(0, movement);
+    updateUi(robotId, movement);
     delay(0.2);
     if (this->delegate) {
         auto delegate = *this->delegate;
@@ -150,7 +150,7 @@ MazeView::WallSurrounding MazeView::moveRobotToStart(int robotId) {
     auto isFirstRobot = robotId == 0;
     auto rotationAngle = isFirstRobot ? 0 : 180;
     auto mazeLength = getMazeLength();
-    auto startCoordinate = isFirstRobot ? Coordinate(0, mazeLength) : Coordinate(mazeLength, 0);
+    auto startCoordinate = isFirstRobot ? Coordinate(mazeLength, 0) : Coordinate(0, mazeLength);
 
     moveRobot(startCoordinate, rotationAngle);
 
@@ -252,7 +252,7 @@ void MazeView::buildMaze() {
 void MazeView::moveRobot(const Coordinate &coordinate, int rotation) {
     Log::print("MazeView::moveRobot(&coordinate, rotation: " + std::to_string(rotation) + ")");
     this->currentRobotField->showRobot(false);
-    this->currentRobotField = this->mazeBoard[coordinate.row][coordinate.column];
+    this->currentRobotField = this->mazeBoard[coordinate.column][coordinate.row];
     this->currentRobotField->resetCurrentRobotRotationWith(rotation);
     this->currentRobotField->showRobot(true);
 }
@@ -260,7 +260,8 @@ void MazeView::moveRobot(const Coordinate &coordinate, int rotation) {
 void MazeView::showRobots(bool withRobot1, bool withRobot2) {
     Log::print("MazeView::showRobots(withRobot1, withRobot2)");
     auto mazeLength = getMazeLength();
-    mazeBoard[0][mazeLength]->showRobot(withRobot1);
+    this->currentRobotField = mazeBoard[0][mazeLength];
+    this->currentRobotField->showRobot(withRobot1);
 
     if (simulationMode == TWO_ROBOTS) {
         mazeBoard[mazeLength][0]->showRobot(withRobot2, 180);
