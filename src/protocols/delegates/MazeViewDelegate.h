@@ -11,6 +11,7 @@
 class MazeViewDelegate {
 public:
     virtual void robotDidMove(int robotId, Direction direction) = 0;
+    virtual void delayDidHappen(int robotId, int msecs) = 0;
     virtual ~MazeViewDelegate() = default;
 };
 

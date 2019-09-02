@@ -12,7 +12,8 @@ SimulationController::SimulationController(SimulationSettings &simulationSetting
         : BaseController(simulationSettings, parent), returnDelegate(std::move(returnDelegate)) {
     Log::print("SimulationController::SimulationController(&simulationSettings, returnDelegate?, *parent)");
     this->simulation = new Simulation(*simulationSettings.maze, simulationSettings.robotAlgorithms,
-                                      Simulation::RobotDelegates(std::make_optional(this), std::make_optional(this)));
+                                      Simulation::RobotDelegates(std::make_optional(this), std::make_optional(this)),
+                                      this);
     setUpUi();
 }
 
@@ -159,6 +160,37 @@ void SimulationController::updateDistanceValueForRobot(int robotId, int distance
     }
 }
 
+void SimulationController::updateTimeValueForRobot(int robotId, double time) const {
+    Log::print("SimulationController::updateTimeValueForRobot(robotId: " + std::to_string(robotId) +
+               ", time: " + std::to_string(time) + ")");
+    switch (robotId) {
+        case 0:
+            this->leftSimulationStateView->setTimeValue(time);
+            break;
+        case 1:
+            this->rightSimulationStateView->setTimeValue(time);
+            break;
+        default:
+            break;
+    }
+}
+
+void SimulationController::updateSpeedValueForRobot(int robotId) const {
+    Log::print("SimulationController::updateSpeedValueForRobot(robotId: " + std::to_string(robotId) + ")");
+    switch (robotId) {
+        case 0:
+            this->leftSimulationStateView->setSpeedValue(
+                    getDistanceForRobot(robotId) / getSimulationTimeForRobot(robotId));
+            break;
+        case 1:
+            this->rightSimulationStateView->setSpeedValue(
+                    getDistanceForRobot(robotId) / getSimulationTimeForRobot(robotId));
+            break;
+        default:
+            break;
+    }
+}
+
 void SimulationController::updateRobotsDistance(int robotId) {
     Log::print("SimulationController::updateRobotsDistance(robotId: " + std::to_string(robotId) + ")");
     switch (robotId) {
@@ -185,9 +217,44 @@ int SimulationController::getDistanceForRobot(int robotId) const {
     }
 }
 
+void SimulationController::updateSimulationTime(int robotId, int msecs) {
+    Log::print("SimulationController::updateSimulationTime(robotId: " + std::to_string(robotId) +
+               ", msecs: " + std::to_string(msecs) + ")");
+    switch (robotId) {
+        case 0:
+            this->simulationTimes.first += (static_cast<double>(msecs) / 1000);
+            break;
+        case 1:
+            this->simulationTimes.second += (static_cast<double>(msecs) / 1000);
+            break;
+        default:
+            break;
+    }
+}
+
+double SimulationController::getSimulationTimeForRobot(int robotId) const {
+    Log::print("SimulationController::getSimulationTimeForRobot(robotId: " + std::to_string(robotId) + ")");
+    switch (robotId) {
+        case 0:
+            return this->simulationTimes.first;
+        case 1:
+            return this->simulationTimes.second;
+        default:
+            return 0.;
+    }
+}
+
 void SimulationController::robotDidMove(int robotId, Direction direction) {
     Log::print("SimulationController::robotDidMove(robotId: " + std::to_string(robotId) + ", direction)");
     activateArrowForRobot(robotId, direction);
+}
+
+void SimulationController::delayDidHappen(int robotId, int msecs) {
+    Log::print("SimulationController::delayDidHappen(robotId: " + std::to_string(robotId) +
+               ", msecs: " + std::to_string(msecs) + ")");
+    updateSimulationTime(robotId, msecs);
+    updateTimeValueForRobot(robotId, getSimulationTimeForRobot(robotId));
+    updateSpeedValueForRobot(robotId);
 }
 
 void SimulationController::robotShouldGoTo(int robotId, RobotMovement movement) {
@@ -212,4 +279,20 @@ void SimulationController::robotShouldGoToStart(int robotId) {
 void SimulationController::robotDidFinish(int robotId) {
     Log::print("SimulationController::robotDidFinish(robotId: " + std::to_string(robotId) + ")");
     deactivateAllArrowsForRobot(robotId);
+}
+
+void SimulationController::simulationIterationDidHappen(int robotId, int msecs) {
+    Log::print("SimulationController::simulationIterationDidHappen(robotId: " + std::to_string(robotId) +
+               ", msecs: " + std::to_string(msecs) + ")");
+    updateSimulationTime(robotId, msecs);
+    updateTimeValueForRobot(robotId, getSimulationTimeForRobot(robotId));
+    updateSpeedValueForRobot(robotId);
+}
+
+void SimulationController::simulationDidReset() {
+    Log::print("SimulationController::simulationDidReset()");
+    this->leftSimulationStateView->setTimeValue(0);
+    this->rightSimulationStateView->setTimeValue(0);
+    this->leftSimulationStateView->setSpeedValue(0);
+    this->rightSimulationStateView->setSpeedValue(0);
 }

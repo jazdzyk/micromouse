@@ -129,7 +129,8 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
     delay(0.2);
     if (this->delegate) {
         auto delegate = *this->delegate;
-        delegate->robotDidMove(0, Direction::TOP);
+        delegate->robotDidMove(robotId, Direction::TOP);
+        delegate->delayDidHappen(robotId, 200);
     }
     auto newCoordinate = (*currentRobotField->getMazeField()
             ->getNeighbourAssociatedWithWallAt(wallSide))->getCoordinate();

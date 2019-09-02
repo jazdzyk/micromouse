@@ -12,6 +12,7 @@
 #include <QObject>
 #include <utility>
 #include <src/views/MazeView.h>
+#include <src/protocols/delegates/SimulationDelegate.h>
 
 class Simulation {
 public:
@@ -20,7 +21,8 @@ public:
     using RobotDelegates = std::pair<std::optional<RobotDelegate *>, std::optional<RobotDelegate *>>;
     using RobotSurrounding = MazeView::WallSurrounding ;
 
-    Simulation(Maze *maze, const RobotAlgorithms& robotAlgorithms, const RobotDelegates& robotDelegates);
+    Simulation(Maze *maze, const RobotAlgorithms &robotAlgorithms, const RobotDelegates &robotDelegates,
+               std::optional<SimulationDelegate *> simulationDelegate = {});
     ~Simulation();
 
     void start() const;
@@ -31,6 +33,10 @@ public:
     void updateRobotCurrentPosition(int robotId, const Coordinate& coordinate) const;
 
 private:
+    const int ITERATION_TIME = 50;
+
+    std::optional<SimulationDelegate *> delegate;
+
     Robot<15, 100, 12, 20> *robot1;
     std::optional<Robot<15, 100, 12, 20> *> robot2;
 

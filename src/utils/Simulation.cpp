@@ -6,8 +6,10 @@
 
 
 Simulation::Simulation(Maze *maze, const Simulation::RobotAlgorithms &robotAlgorithms,
-                       const Simulation::RobotDelegates &robotDelegates) : maze(maze), algorithms(robotAlgorithms) {
-    Log::print("Simulation::Simulation(*maze, &robotAlgorithms, &robotDelegates)");
+                       const Simulation::RobotDelegates &robotDelegates,
+                       std::optional<SimulationDelegate *> simulationDelegate) : maze(maze),
+                       algorithms(robotAlgorithms), delegate(std::move(simulationDelegate)) {
+    Log::print("Simulation::Simulation(*maze, &robotAlgorithms, &robotDelegates, *simulationDelegate?)");
     this->robot1 = buildRobot(0, robotAlgorithms.first,
                               Coordinate(getMazeLength(), 0), robotDelegates.first);
 
@@ -34,14 +36,22 @@ void Simulation::start() const {
     Log::print("Simulation::start()");
     QObject::connect(this->timer1, &QTimer::timeout, [this] {
         this->simulate(this->robot1, this->timer1);
+        if (this->delegate) {
+            auto delegate = *this->delegate;
+            delegate->simulationIterationDidHappen(0, ITERATION_TIME);
+        }
     });
-    this->timer1->start(50);
+    this->timer1->start(ITERATION_TIME);
 
     if (this->robot2) {
         QObject::connect(this->timer2, &QTimer::timeout, [this] {
             this->simulate(*this->robot2, this->timer2);
+            if (this->delegate) {
+                auto delegate = *this->delegate;
+                delegate->simulationIterationDidHappen(1, ITERATION_TIME);
+            }
         });
-        this->timer2->start(51);
+        this->timer2->start(ITERATION_TIME + 1);
     }
 }
 
@@ -57,12 +67,16 @@ void Simulation::pause() const {
 
 void Simulation::reset() {
     Log::print("Simulation::reset()");
-    this->timer1->stop();
-    this->timer2->stop();
+    resetTimers();
 
     this->robot1 = resetRobot(this->robot1);
     if (this->robot2) {
         this->robot2.emplace(resetRobot(*this->robot2));
+    }
+
+    if (this->delegate) {
+        auto delegate = *this->delegate;
+        delegate->simulationDidReset();
     }
 }
 

@@ -27,7 +27,7 @@ void SimulationStateView::setName(const QString &name) const {
 
 void SimulationStateView::setTimeValue(double time) {
     Log::print("SimulationStateView::setTimeValue(time: " + std::to_string(time) + ")");
-    this->timeValueLabel->setText(QString::number(time, 'g', 2) + this->locale[PL::RESULT_TIME_SUFFIX_LABEL]);
+    this->timeValueLabel->setText(QString::number(time, 'g', 3) + this->locale[PL::RESULT_TIME_SUFFIX_LABEL]);
 }
 
 void SimulationStateView::setDistanceValue(int distance) {
@@ -37,7 +37,7 @@ void SimulationStateView::setDistanceValue(int distance) {
 
 void SimulationStateView::setSpeedValue(double speed) {
     Log::print("SimulationStateView::setSpeedValue(speed: " + std::to_string(speed) + ")");
-    this->speedValueLabel->setText(QString::number(speed, 'g', 2) +
+    this->speedValueLabel->setText(QString::number(speed, 'g', 3) +
                                    this->locale[PL::RESULT_SPEED_SUFFIX_LABEL]);
 }
 
