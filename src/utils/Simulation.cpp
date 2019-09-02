@@ -17,8 +17,7 @@ Simulation::Simulation(Maze *maze, const Simulation::RobotAlgorithms &robotAlgor
                                         Coordinate(0, getMazeLength()), robotDelegates.second));
     }
 
-    this->timer1 = new QTimer;
-    this->timer2 = new QTimer;
+    initializeTimers();
 }
 
 Simulation::~Simulation() {
@@ -37,6 +36,13 @@ void Simulation::start() const {
         this->simulate(this->robot1, this->timer1);
     });
     this->timer1->start(50);
+
+    if (this->robot2) {
+        QObject::connect(this->timer2, &QTimer::timeout, [this] {
+            this->simulate(*this->robot2, this->timer2);
+        });
+        this->timer2->start(51);
+    }
 }
 
 void Simulation::pause() const {
@@ -82,6 +88,7 @@ void Simulation::simulate(Robot<15, 100, 12, 20> *robot, QTimer *timer) const {
 
     if (robot->getCurrentPosition() == getMazeEndCoordinate()) {
         timer->stop();
+        robot->finish();
     }
 }
 
@@ -92,9 +99,9 @@ Robot<15, 100, 12, 20> *Simulation::buildRobot(int id, RobotAlgorithm algorithm,
 
     auto robotField = maze->getFieldAt(coordinate);
     robot->updateSurrounding(
-            robotField->getWallAt(WallSide::LEFT),
-            robotField->getWallAt(WallSide::RIGHT),
-            robotField->getWallAt(WallSide::TOP)
+            robotField->getWallAt(id == 0 ? WallSide::LEFT : WallSide::RIGHT),
+            robotField->getWallAt(id == 0 ? WallSide::RIGHT : WallSide::LEFT),
+            robotField->getWallAt(id == 0 ? WallSide::TOP : WallSide::BOTTOM)
     );
 
     return robot;
@@ -116,6 +123,23 @@ Robot<15, 100, 12, 20> *Simulation::resetRobot(Robot<15, 100, 12, 20> *robot) {
 int Simulation::getMazeLength() const {
     Log::print("Simulation::getMazeLength()");
     return static_cast<int>(sqrt(static_cast<int>(this->maze->getSize())) - 1);
+}
+
+void Simulation::initializeTimers() {
+    Log::print("Simulation::initializeTimers()");
+    this->timer1 = new QTimer;
+    this->timer2 = new QTimer;
+}
+
+void Simulation::resetTimers() {
+    Log::print("Simulation::resetTimers()");
+    this->timer1->stop();
+    this->timer2->stop();
+
+    utils::destruct(this->timer1);
+    utils::destruct(this->timer2);
+
+    initializeTimers();
 }
 
 Coordinate Simulation::getMazeEndCoordinate() const {

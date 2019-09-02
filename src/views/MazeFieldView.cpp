@@ -14,7 +14,7 @@ MazeFieldView::MazeFieldView(const Coordinate &coordinate, MazeSize mazeSize,
 }
 
 MazeFieldView::MazeFieldView(MazeField *mazeField, MazeSize mazeSize, std::optional<MazeFieldViewDelegate *> delegate)
-        : QLabel("(" + QString::number(mazeField->getCoordinate().row) + ", " + QString::number(mazeField->getCoordinate().column) + ")"), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)), fieldType(::PLAIN), currentRobotRotation(0) {
+        : QLabel(/*"(" + QString::number(mazeField->getCoordinate().row) + ", " + QString::number(mazeField->getCoordinate().column) + ")"*/), mazeField(mazeField), mazeSize(mazeSize), delegate(std::move(delegate)), fieldType(::PLAIN), currentRobotRotation(0) {
     Log::print("MazeFieldView::MazeFieldView(*mazeField, mazeSize, delegate?)");
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setEnabled(true);

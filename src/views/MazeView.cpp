@@ -43,9 +43,10 @@ Maze *MazeView::getMaze() const {
 MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movement) {
     Log::print("MazeView::moveRobotTo(robotId: " + std::to_string(robotId) + ", movement)");
     auto rotationAngle = 0;
+    auto currentRobotField = getCurrentFieldForRobot(robotId);
 
-    auto getMovementDirection = [this](RobotMovement movement) {
-        auto currentRobotRotation = this->currentRobotField->getCurrentRobotRotationAngle() % 360;
+    auto getMovementDirection = [this, currentRobotField](RobotMovement movement) {
+        auto currentRobotRotation = currentRobotField->getCurrentRobotRotationAngle() % 360;
 
         auto getMovement = [](RobotMovement desiredMovement, const std::vector<WallSide> &choices) {
             switch (desiredMovement) {
@@ -123,50 +124,53 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
         }
     };
 
-    this->currentRobotField->showRobot(true, rotationAngle);
+    currentRobotField->showRobot(true, rotationAngle);
     updateUi(robotId, movement);
     delay(0.2);
     if (this->delegate) {
         auto delegate = *this->delegate;
         delegate->robotDidMove(0, Direction::TOP);
     }
-    auto newCoordinate = (*this->currentRobotField->getMazeField()
+    auto newCoordinate = (*currentRobotField->getMazeField()
             ->getNeighbourAssociatedWithWallAt(wallSide))->getCoordinate();
-    auto currentRotation = this->currentRobotField->getCurrentRobotRotationAngle();
-    moveRobot(newCoordinate, currentRotation);
+    auto currentRotation = currentRobotField->getCurrentRobotRotationAngle();
+    moveRobot(robotId, currentRobotField, newCoordinate, currentRotation);
+    currentRobotField = getCurrentFieldForRobot(robotId);
 
     return {
-            {WallSide::LEFT,  this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::LEFT,  currentRobotField->getMazeField()->getWallAt(
                     getMovementDirection(RobotMovement::LEFT))},
-            {WallSide::RIGHT, this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::RIGHT, currentRobotField->getMazeField()->getWallAt(
                     getMovementDirection(RobotMovement::RIGHT))},
-            {WallSide::TOP,   this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::TOP,   currentRobotField->getMazeField()->getWallAt(
                     getMovementDirection(RobotMovement::FORWARD))}
     };
 }
 
 MazeView::WallSurrounding MazeView::moveRobotToStart(int robotId) {
     Log::print("MazeView::moveRobotToStart(robotId: " + std::to_string(robotId) + ")");
+    auto currentRobotField = getCurrentFieldForRobot(robotId);
     auto isFirstRobot = robotId == 0;
     auto rotationAngle = isFirstRobot ? 0 : 180;
     auto mazeLength = getMazeLength();
     auto startCoordinate = isFirstRobot ? Coordinate(mazeLength, 0) : Coordinate(0, mazeLength);
 
-    moveRobot(startCoordinate, rotationAngle);
+    moveRobot(robotId, currentRobotField, startCoordinate, rotationAngle);
+    currentRobotField = getCurrentFieldForRobot(robotId);
 
     return {
-            {WallSide::LEFT,  this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::LEFT,  currentRobotField->getMazeField()->getWallAt(
                     isFirstRobot ? WallSide::LEFT : WallSide::RIGHT)},
-            {WallSide::RIGHT, this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::RIGHT, currentRobotField->getMazeField()->getWallAt(
                     isFirstRobot ? WallSide::RIGHT : WallSide::LEFT)},
-            {WallSide::TOP,   this->currentRobotField->getMazeField()->getWallAt(
+            {WallSide::TOP,   currentRobotField->getMazeField()->getWallAt(
                     isFirstRobot ? WallSide::TOP : WallSide::BOTTOM)}
     };
 }
 
-Coordinate MazeView::getCurrentRobotCoordinate() const {
-    Log::print("MazeView::getCurrentRobotCoordinate()");
-    return this->currentRobotField->getCoordinate();
+Coordinate MazeView::getCurrentRobotCoordinate(int robotId) const {
+    Log::print("MazeView::getCurrentRobotCoordinate(robotId: " + std::to_string(robotId) + ")");
+    return getCurrentFieldForRobot(robotId)->getCoordinate();
 }
 
 void MazeView::showMazeExit() const {
@@ -249,22 +253,38 @@ void MazeView::buildMaze() {
     this->maze = new Maze(this->mazeSize, this->simulationMode, mazeFields);
 }
 
-void MazeView::moveRobot(const Coordinate &coordinate, int rotation) {
-    Log::print("MazeView::moveRobot(&coordinate, rotation: " + std::to_string(rotation) + ")");
-    this->currentRobotField->showRobot(false);
-    this->currentRobotField = this->mazeBoard[coordinate.column][coordinate.row];
-    this->currentRobotField->resetCurrentRobotRotationWith(rotation);
-    this->currentRobotField->showRobot(true);
+void MazeView::moveRobot(int robotId, MazeFieldView *currentField, const Coordinate &coordinate, int rotation) {
+    Log::print("MazeView::moveRobot(robotId: " + std::to_string(robotId) + ", *currentField, &coordinate, rotation: " + std::to_string(rotation) + ")");
+    currentField->showRobot(false);
+    currentField = this->mazeBoard[coordinate.column][coordinate.row];
+    setCurrentFieldForRobot(robotId, currentField);
+    currentField->resetCurrentRobotRotationWith(rotation);
+    currentField->showRobot(true);
 }
 
 void MazeView::showRobots(bool withRobot1, bool withRobot2) {
     Log::print("MazeView::showRobots(withRobot1, withRobot2)");
     auto mazeLength = getMazeLength();
-    this->currentRobotField = mazeBoard[0][mazeLength];
-    this->currentRobotField->showRobot(withRobot1);
+    this->currentRobot1Field = mazeBoard[0][mazeLength];
+    this->currentRobot1Field->showRobot(withRobot1);
 
     if (simulationMode == TWO_ROBOTS) {
-        mazeBoard[mazeLength][0]->showRobot(withRobot2, 180);
+        this->currentRobot2Field = mazeBoard[mazeLength][0];
+        this->currentRobot2Field->showRobot(withRobot2, 180);
+    }
+}
+
+MazeFieldView *MazeView::getCurrentFieldForRobot(int robotId) const {
+    Log::print("MazeView::getCurrentFieldForRobot(robotId: " + std::to_string(robotId) + ")");
+    return robotId == 0 ? this->currentRobot1Field : this->currentRobot2Field;
+}
+
+void MazeView::setCurrentFieldForRobot(int robotId, MazeFieldView* newField) {
+    Log::print("MazeView::setCurrentFieldForRobot(robotId: " + std::to_string(robotId) + ", *newField)");
+    if (robotId == 0) {
+        this->currentRobot1Field = newField;
+    } else {
+        this->currentRobot2Field = newField;
     }
 }
 

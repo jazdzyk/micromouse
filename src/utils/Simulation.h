@@ -46,6 +46,9 @@ private:
                                                      std::optional<RobotDelegate *> delegate) const;
     Robot<15, 100, 12, 20>* resetRobot(Robot<15, 100, 12, 20> *robot);
 
+    void initializeTimers();
+    void resetTimers();
+
     [[nodiscard]] int getMazeLength() const;
     [[nodiscard]] Coordinate getMazeEndCoordinate() const;
 

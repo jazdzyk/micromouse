@@ -30,7 +30,7 @@ public:
 
     WallSurrounding moveRobotTo(int robotId, RobotMovement movement);
     WallSurrounding moveRobotToStart(int robotId);
-    [[nodiscard]] Coordinate getCurrentRobotCoordinate() const;
+    [[nodiscard]] Coordinate getCurrentRobotCoordinate(int robotId) const;
 
     void showMazeExit() const;
     void showMazeEntry() const;
@@ -49,7 +49,8 @@ private:
     MazeBoard mazeBoard;
     Maze* maze;
 
-    MazeFieldView *currentRobotField;
+    MazeFieldView *currentRobot1Field;
+    MazeFieldView *currentRobot2Field = nullptr;
 
     std::optional<MazeViewDelegate *> delegate;
 
@@ -58,8 +59,11 @@ private:
     void createBoard(std::optional<const MazeFields> mazeFields = {});
     void buildMaze();
 
-    void moveRobot(const Coordinate& coordinate, int rotation);
+    void moveRobot(int robotId, MazeFieldView *currentField, const Coordinate &coordinate, int rotation);
     void showRobots(bool withRobot1, bool withRobot2);
+
+    MazeFieldView* getCurrentFieldForRobot(int robotId) const;
+    void setCurrentFieldForRobot(int robotId, MazeFieldView* newField);
 
     [[nodiscard]] int getMazeLength() const;
 

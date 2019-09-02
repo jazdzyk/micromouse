@@ -109,6 +109,7 @@ void SimulationController::onResetSimulationButtonClicked() {
 
 void SimulationController::onReturnButtonClicked() {
     Log::print("SimulationController::onReturnButtonClicked()");
+    this->simulation->reset();
     if (this->returnDelegate) {
         auto delegate = *this->returnDelegate;
         delegate->controllerWillReturn(this);
@@ -192,7 +193,7 @@ void SimulationController::robotDidMove(int robotId, Direction direction) {
 void SimulationController::robotShouldGoTo(int robotId, RobotMovement movement) {
     Log::print("SimulationController::robotShouldGoTo(robotId: " + std::to_string(robotId) + ", movement)");
     this->simulation->updateRobotSurrounding(robotId, this->mazeView->moveRobotTo(robotId, movement));
-    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate());
+    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate(robotId));
 
     updateRobotsDistance(robotId);
     updateDistanceValueForRobot(robotId, getDistanceForRobot(robotId));
@@ -201,7 +202,7 @@ void SimulationController::robotShouldGoTo(int robotId, RobotMovement movement) 
 void SimulationController::robotShouldGoToStart(int robotId) {
     Log::print("SimulationController::robotShouldGoToStart(robotId: " + std::to_string(robotId) + ")");
     this->simulation->updateRobotSurrounding(robotId, this->mazeView->moveRobotToStart(robotId));
-    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate());
+    this->simulation->updateRobotCurrentPosition(robotId, this->mazeView->getCurrentRobotCoordinate(robotId));
 
     this->robotsDistance = {0, 0};
     updateDistanceValueForRobot(robotId, getDistanceForRobot(robotId));
