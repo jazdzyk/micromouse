@@ -94,7 +94,7 @@ public:
 
     /**
      * A public method which enables to 'remove' a wall in a direction to a given coordinate,
-     * which means that the desired wall is set inactive.
+     * which means that the desired wall and its neighbour's counterpart are set inactive.
      *
      * @param nextCoordinate a coordinate of a field in a desired direction
      */
@@ -155,7 +155,7 @@ private:
 
     /**
      * A private method which 'removes' a wall in a specified side of the field.
-     * It means that the wall is set inactive.
+     * It means that the wall and its neighbour's counterpart are set inactive.
      *
      * @param side a side of the desired wall
      */
