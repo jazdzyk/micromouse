@@ -80,13 +80,19 @@ private:
 
     RobotMovement bruteForce(DistanceMeasurement &measurement) {
         Log::print("MazeSolver::bruteForce(&measurement)");
-        // TODO: probably something does not work as it should
-        if (measurement[WallSide::TOP] > distanceThreshold && measurement[WallSide::LEFT] > distanceThreshold &&
+        if (measurement[WallSide::TOP] > distanceThreshold &&
+            measurement[WallSide::LEFT] > distanceThreshold &&
             measurement[WallSide::RIGHT] > distanceThreshold) {
             return static_cast<RobotMovement>(rand() % 3);
         } else if (measurement[WallSide::LEFT] > distanceThreshold &&
                    measurement[WallSide::RIGHT] > distanceThreshold) {
-            return static_cast<RobotMovement>(rand() % 3);
+            return static_cast<RobotMovement>(rand() % 2 == 0 ? 1 : 2);
+        } else if (measurement[WallSide::LEFT] > distanceThreshold &&
+                   measurement[WallSide::TOP] > distanceThreshold) {
+            return static_cast<RobotMovement>(rand() % 2 == 0 ? 0 : 1);
+        } else if (measurement[WallSide::RIGHT] > distanceThreshold &&
+                   measurement[WallSide::TOP] > distanceThreshold) {
+            return static_cast<RobotMovement>(rand() % 2 == 0 ? 0 : 2);
         } else if (measurement[WallSide::LEFT] > distanceThreshold) {
             return RobotMovement::LEFT;
         } else if (measurement[WallSide::RIGHT] > distanceThreshold) {

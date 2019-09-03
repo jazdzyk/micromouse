@@ -24,10 +24,10 @@ enum RobotAlgorithm {
 };
 
 enum class RobotMovement {
-    FORWARD,
-    BACK,
-    LEFT,
-    RIGHT,
+    FORWARD = 0,
+    BACK = 3,
+    LEFT = 1,
+    RIGHT = 2,
 };
 
 enum class Direction {
