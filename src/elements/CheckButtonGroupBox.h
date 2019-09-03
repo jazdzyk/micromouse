@@ -37,7 +37,7 @@ public:
     ~CheckButtonGroupBox() override;
 
     /**
-     * A public method which informs whether a pair with a given id is currently chosen.
+     * A public method which gives information whether a pair with a given id is currently chosen.
      *
      * @param id an id of a pair checkbox-button
      * @return an appropriate boolean flag
