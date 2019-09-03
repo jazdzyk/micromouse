@@ -9,15 +9,56 @@
 #include <QtWidgets/QLabel>
 #include <src/utils/Logging.h>
 
+/**
+ * The ImageLabel class inherits from QLabel and extends its functionalities.
+ * Its purpose is to display image.
+ */
 class ImageLabel : public QLabel {
 public:
-    ImageLabel(const QString& imageUrl, int size);
-    ImageLabel(const QPixmap& imagePixmap, int size);
-    ImageLabel(const QImage& image, int size);
+    /**
+     * ImageLabel class constructor.
+     *
+     * @param imageUrl a url to the location of the image to be displayed
+     * @param size a size of the image square
+     */
+    ImageLabel(const QString &imageUrl, int size);
 
-    void updatePixmap(const QString& imageUrl);
-    void updatePixmap(const QPixmap& imagePixmap);
-    void updatePixmap(const QImage& image);
+    /**
+     * ImageLabel class constructor.
+     *
+     * @param imagePixmap a pixmap of the image to be displayed
+     * @param size a size of the image square
+     */
+    ImageLabel(const QPixmap &imagePixmap, int size);
+
+    /**
+     * ImageLabel class constructor.
+     *
+     * @param image an image to be displayed
+     * @param size a size of the image square
+     */
+    ImageLabel(const QImage &image, int size);
+
+    /**
+     * A private method which enables updating an image being displayed.
+     *
+     * @param imageUrl a url to the location of the image to be displayed
+     */
+    void updatePixmap(const QString &imageUrl);
+
+    /**
+     * A private method which enables updating an image being displayed.
+     *
+     * @param imagePixmap a pixmap of the image to be displayed
+     */
+    void updatePixmap(const QPixmap &imagePixmap);
+
+    /**
+     * A private method which enables updating an image being displayed.
+     *
+     * @param image an image to be displayed
+     */
+    void updatePixmap(const QImage &image);
 
 private:
     int size;
