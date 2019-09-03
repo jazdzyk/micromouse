@@ -82,12 +82,15 @@ QVBoxLayout *SimulationController::prepareSimulationStateLayout() {
     this->leftSimulationStateView = new SimulationStateView;
     this->leftSimulationStateView->setName(this->locale[PL::RESULT_ROBOT1_LABEL]);
 
-    this->rightSimulationStateView = new SimulationStateView;
-    this->rightSimulationStateView->setName(this->locale[PL::RESULT_ROBOT2_LABEL]);
-
     auto layout = new QVBoxLayout;
     layout->addWidget(this->leftSimulationStateView);
-    layout->addWidget(this->rightSimulationStateView);
+
+    if (this->simulationSettings.simulationMode == SimulationMode::TWO_ROBOTS) {
+        this->rightSimulationStateView = new SimulationStateView;
+        this->rightSimulationStateView->setName(this->locale[PL::RESULT_ROBOT2_LABEL]);
+        layout->addWidget(this->rightSimulationStateView);
+    }
+
     layout->addStretch(1);
 
     return layout;
@@ -292,7 +295,9 @@ void SimulationController::simulationIterationDidHappen(int robotId, int msecs) 
 void SimulationController::simulationDidReset() {
     Log::print("SimulationController::simulationDidReset()");
     this->leftSimulationStateView->setTimeValue(0);
-    this->rightSimulationStateView->setTimeValue(0);
     this->leftSimulationStateView->setSpeedValue(0);
-    this->rightSimulationStateView->setSpeedValue(0);
+    if (this->simulationSettings.simulationMode == ::TWO_ROBOTS) {
+        this->rightSimulationStateView->setTimeValue(0);
+        this->rightSimulationStateView->setSpeedValue(0);
+    }
 }
