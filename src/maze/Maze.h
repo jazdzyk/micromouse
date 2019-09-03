@@ -30,6 +30,8 @@ public:
 
     void iterateOverAllFields(const IterateOverFieldsFunction& function) const;
 
+    void assignNeighboursToFields() const;
+
     // Serializable methods
     [[nodiscard]] QJsonObject serializeToJson() const override;
     void deserializeJson(const QJsonObject& json) override;

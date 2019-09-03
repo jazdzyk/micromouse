@@ -49,7 +49,7 @@ MazeWall::WallSide MazeWall::getSide() const {
 
 std::optional<MazeWall *> MazeWall::getNeighbourWallAt(MazeWall::WallSide side) const {
     Log::print("MazeWall::getNeighbourWallAt(side)");
-    if (this->neighbour) {
+    if (this->neighbour && this->neighbour != nullptr) {
         auto field = *this->neighbour;
         return field->getWallAt(side);
     }

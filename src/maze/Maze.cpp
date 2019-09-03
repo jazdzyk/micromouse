@@ -51,6 +51,26 @@ void Maze::iterateOverAllFields(const Maze::IterateOverFieldsFunction &function)
     }
 }
 
+void Maze::assignNeighboursToFields() const {
+    Log::print("Maze::assignNeighboursToFields()");
+    iterateOverAllFields([this](auto field) {
+        auto coordinate = field->getCoordinate().transpose();
+        auto mazeSize = static_cast<int>(sqrt(static_cast<int>(this->size))) - 1;
+
+        auto topNeighbour = coordinate.column > 0 ? this->fields[coordinate.column - 1][coordinate.row] : nullptr;
+        auto bottomNeighbour =
+                coordinate.column < mazeSize ? this->fields[coordinate.column + 1][coordinate.row] : nullptr;
+        auto leftNeighbour = coordinate.row > 0 ? this->fields[coordinate.column][coordinate.row - 1] : nullptr;
+        auto rightNeighbour =
+                coordinate.row < mazeSize ? this->fields[coordinate.column][coordinate.row + 1] : nullptr;
+
+        field->setNeighbourAssociatedWithWallAt(Direction::LEFT, leftNeighbour);
+        field->setNeighbourAssociatedWithWallAt(Direction::RIGHT, rightNeighbour);
+        field->setNeighbourAssociatedWithWallAt(Direction::TOP, topNeighbour);
+        field->setNeighbourAssociatedWithWallAt(Direction::BOTTOM, bottomNeighbour);
+    });
+}
+
 QJsonObject Maze::serializeToJson() const {
     Log::print("Maze::serializeToJson()");
     QJsonObject json;

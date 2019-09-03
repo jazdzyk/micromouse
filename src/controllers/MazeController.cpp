@@ -155,6 +155,7 @@ void MazeController::onLoadButtonClicked() {
     }
 
     this->simulationSettings.maze.emplace(new Maze(loadedJsonDocument.object()));
+    (*this->simulationSettings.maze)->assignNeighboursToFields();
     delete this->mazeView;
     this->mazeView = new MazeView(*this->simulationSettings.maze, false);
     setMazeHolder(this->mazeView);

@@ -30,6 +30,10 @@ public:
             return (toWallFactor / 100.0) * mazeFieldSize;
         } else {
             std::function<bool(MazeWall*, MazeWall*&)> isWallLocated = [](MazeWall *wall, MazeWall *&newWall) {
+                if (!wall->getNeighbour()) {
+                    return false;
+                }
+
                 auto neighbourWall = wall->getNeighbourWallAt(wall->getSide());
                 if (neighbourWall) {
                     newWall = *neighbourWall;
@@ -42,7 +46,7 @@ public:
             MazeWall *_checkWall;
 
             int howMany = 1;
-            while (!isWallLocated(currentlyCheckedWall, _checkWall)) {
+            while (!isWallLocated(currentlyCheckedWall, _checkWall) && howMany != mazeFieldSize) {
                 howMany++;
                 currentlyCheckedWall = _checkWall;
             }

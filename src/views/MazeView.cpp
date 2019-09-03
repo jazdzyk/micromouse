@@ -12,7 +12,7 @@ MazeView::MazeView(MazeSize mazeSize, SimulationMode simulationMode, std::option
 }
 
 MazeView::MazeView(Maze *maze, bool withRobot, std::optional<MazeViewDelegate *> delegate)
-        : QGridLayout(), delegate(std::move(delegate)) {
+        : QGridLayout(), maze(maze), delegate(std::move(delegate)) {
     Log::print("MazeView::MazeView(*maze, withRobot, delegate?)");
     this->mazeSize = maze->getSize();
     this->simulationMode = maze->getSimulationMode();
@@ -20,8 +20,6 @@ MazeView::MazeView(Maze *maze, bool withRobot, std::optional<MazeViewDelegate *>
     createPredefinedUi(maze->getFields(), withRobot);
     showMazeExit();
     showMazeEntry();
-
-    this->maze = maze;
 }
 
 MazeView::~MazeView() {
