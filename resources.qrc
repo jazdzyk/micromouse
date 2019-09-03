@@ -1,0 +1,14 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file alias="left-arrow">resources/images/left-arrow.png</file>
+        <file alias="left-arrow-inactive">resources/images/left-arrow-inactive.png</file>
+        <file alias="quit-mark">resources/images/quit-mark.png</file>
+        <file alias="return-mark">resources/images/return-mark.png</file>
+        <file alias="right-arrow">resources/images/right-arrow.png</file>
+        <file alias="right-arrow-inactive">resources/images/right-arrow-inactive.png</file>
+        <file alias="robot-icon">resources/images/robot-icon.png</file>
+        <file alias="up-arrow">resources/images/up-arrow.png</file>
+        <file alias="up-arrow-inactive">resources/images/up-arrow-inactive.png</file>
+    </qresource>
+</RCC>
