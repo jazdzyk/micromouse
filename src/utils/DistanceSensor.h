@@ -7,7 +7,7 @@
 
 
 #include <functional>
-#include "SensorProtocol.h"
+#include "src/protocols/SensorProtocol.h"
 
 template <int mazeFieldSize = 15, int toWallFactor = 15>
 class DistanceSensor : public SensorProtocol {
