@@ -56,6 +56,10 @@ MazeField *MazeFieldView::getMazeField() const {
     return this->mazeField;
 }
 
+MazeFieldType MazeFieldView::getFieldType() const {
+    return this->fieldType;
+}
+
 Coordinate MazeFieldView::getCoordinate() const {
     Log::print("MazeFieldView::getCoordinate()");
     return this->mazeField->getCoordinate();
@@ -152,7 +156,7 @@ void MazeFieldView::paintFieldIfNeeded() {
             case END:
                 return "red";
             case PLAIN:
-                return "";
+                return "rgb(239, 239, 239)";
             case VISITED:
                 return "yellow";
         }

@@ -33,6 +33,7 @@ public:
     void setColor();
 
     [[nodiscard]] MazeField* getMazeField() const;
+    [[nodiscard]] MazeFieldType getFieldType() const;
     [[nodiscard]] Coordinate getCoordinate() const;
 
     void showRobot(bool robot, int rotation = 0);

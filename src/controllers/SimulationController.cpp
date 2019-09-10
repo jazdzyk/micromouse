@@ -109,6 +109,7 @@ void SimulationController::onPauseSimulationButtonClicked() {
 void SimulationController::onResetSimulationButtonClicked() {
     Log::print("SimulationController::onResetSimulationButtonClicked()");
     this->simulation->reset();
+    this->mazeView->resetFieldsColor();
 }
 
 void SimulationController::onReturnButtonClicked() {

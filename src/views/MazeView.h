@@ -37,6 +37,8 @@ public:
 
     void setDelegate(MazeViewDelegate* delegate);
 
+    void resetFieldsColor();
+
     void iterateOverAllFields(const IterateOverFieldsFunction& function) const;
 
 private:

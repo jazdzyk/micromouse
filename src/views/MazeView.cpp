@@ -192,6 +192,15 @@ void MazeView::setDelegate(MazeViewDelegate *delegate) {
     this->delegate.emplace(delegate);
 }
 
+void MazeView::resetFieldsColor() {
+    Log::print("MazeView::resetFieldsColor()");
+    iterateOverAllFields([this](auto field) {
+        field->setFieldType(MazeFieldType::PLAIN);
+        this->showMazeEntry();
+        this->showMazeExit();
+    });
+}
+
 void MazeView::iterateOverAllFields(const IterateOverFieldsFunction &function) const {
     Log::print("MazeView::iterateOverAllFields(&function)");
     auto boardSize = this->mazeBoard.size();
