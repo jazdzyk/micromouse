@@ -41,7 +41,8 @@ enum MazeFieldType {
     ROBOT1_START,
     ROBOT2_START,
     END,
-    PLAIN
+    PLAIN,
+    VISITED
 };
 
 #endif //MICROMOUSE_ENUMS_H

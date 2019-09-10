@@ -43,6 +43,14 @@ void MazeFieldView::setFieldType(MazeFieldType type) {
     paintFieldIfNeeded();
 }
 
+void MazeFieldView::setColor() {
+    Log::print("MazeFieldView::setColor()");
+    if (this->fieldType != MazeFieldType::END) {
+        this->fieldType = MazeFieldType::VISITED;
+        paintFieldIfNeeded();
+    }
+}
+
 MazeField *MazeFieldView::getMazeField() const {
     Log::print("MazeFieldView::getMazeField()");
     return this->mazeField;
@@ -145,6 +153,8 @@ void MazeFieldView::paintFieldIfNeeded() {
                 return "red";
             case PLAIN:
                 return "";
+            case VISITED:
+                return "yellow";
         }
     };
 

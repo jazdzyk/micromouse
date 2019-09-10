@@ -79,7 +79,6 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
         }
     };
 
-    // ???
     auto delay = [](double secs = 1) {
         auto dieTime = QTime::currentTime().addMSecs(secs * 1000);
         while (QTime::currentTime() < dieTime) {
@@ -130,6 +129,7 @@ MazeView::WallSurrounding MazeView::moveRobotTo(int robotId, RobotMovement movem
         delegate->robotDidMove(robotId, Direction::TOP);
         delegate->delayDidHappen(robotId, 200);
     }
+    currentRobotField->setColor();
     auto newCoordinate = (*currentRobotField->getMazeField()
             ->getNeighbourAssociatedWithWallAt(wallSide))->getCoordinate();
     auto currentRotation = currentRobotField->getCurrentRobotRotationAngle();

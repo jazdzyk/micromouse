@@ -30,6 +30,8 @@ public:
     void setBorder(WallSide side, bool border);
     void setFieldType(MazeFieldType type);
 
+    void setColor();
+
     [[nodiscard]] MazeField* getMazeField() const;
     [[nodiscard]] Coordinate getCoordinate() const;
 
